@@ -27,3 +27,10 @@ const electronHandler = {
 contextBridge.exposeInMainWorld('electron', electronHandler);
 
 export type ElectronHandler = typeof electronHandler;
+
+contextBridge.exposeInMainWorld('db', {
+  loadRequestList: () => ipcRenderer.invoke('loadRequestList'),
+  storeRequestList: (todoList: Array<object>) =>
+    ipcRenderer.invoke('storeRequestList', todoList),
+  resetRequestList: () => ipcRenderer.invoke('resetRequestList'),
+});

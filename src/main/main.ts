@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import Store, { Schema } from 'electron-store';
 
 class AppUpdater {
   constructor() {
@@ -135,3 +136,19 @@ app
     });
   })
   .catch(console.log);
+
+
+
+const storeData = new Store();
+
+ipcMain.handle('loadRequestList', async (event, data) => {
+  return storeData.get('requestList');
+});
+
+ipcMain.handle('storeRequestList', async (event, data) => {
+  storeData.set('requestList', data);
+});
+
+ipcMain.handle('resetRequestList', async (event) => {
+  storeData.set('requestList', null);
+});

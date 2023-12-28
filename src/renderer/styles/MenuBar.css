@@ -1,0 +1,19 @@
+.menu-bar {
+  width: 150px;
+  background-color: rgb(80, 80, 255);
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.menu-bar a {
+  display: block;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: all ease-in 0.1s;
+}
+
+.menu-bar a:hover {
+  color: rgb(160, 160, 255);
+}
