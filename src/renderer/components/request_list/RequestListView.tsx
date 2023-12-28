@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Request } from '../../types/types';
-import { loadRequestList, storeRequestList, resetRequestList } from '../../utils/RequestUtils';
+import {
+  loadRequestList,
+  storeRequestList,
+  resetRequestList,
+} from '../../utils/RequestUtils';
 import { v4 as uuidv4 } from 'uuid';
 import MenuBar from '../MenuBar';
 import RequestListItem from './RequestListItem';
@@ -25,9 +30,9 @@ const RequestListView = () => {
         {
           id: uuidv4(),
           clientId: clientId,
-          requestDate: '2023/02/01',
-          deliveryDate: '2023/03/01',
-          deadline: '2023/04/01',
+          requestDate: '2023-02-01',
+          deliveryDate: '2023-03-01',
+          deadline: '2023-04-01',
           status: '進行中',
           plan: 'フルコーラス',
           fee: 5000,
@@ -39,15 +44,22 @@ const RequestListView = () => {
         ...requestList,
       ];
       setRequestList(newRequestList);
-        storeRequestList(newRequestList);
+      storeRequestList(newRequestList);
       setClientId('');
     }
+  };
+
+  const navigate = useNavigate();
+
+  const handleRowClick = (requestId: string) => {
+    const url = `/request_details/${requestId}`;
+    navigate(url); // ページ遷移
   };
 
   return (
     <div className="app-container">
       <MenuBar />
-      <div className="container">
+      <div className="request-list-container">
         <div className="input-field">
           <input
             type="text"
@@ -58,17 +70,41 @@ const RequestListView = () => {
             追加
           </button>
         </div>
-        
+
         <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-          <ul className="request-list">
+          {/* <ul className="request-list">
             {requestList?.map((request) => {
-              return <RequestListItem key={request.id} request={request} />;
+              return (
+                <Link key={request.id} to={`/request_details/${request.id}`}>
+                  <RequestListItem key={request.id} request={request} />
+                </Link>
+              );
             })}
-          </ul>
+          </ul> */}
+          <table>
+            <thead>
+              <tr>
+                <th>顧客</th>
+                <th>依頼日</th>
+                <th>納期</th>
+                <th>進行状況</th>
+              </tr>
+            </thead>
+            <tbody>
+              {requestList?.map((request) => (
+                <tr key={request.id} onClick={() => handleRowClick(request.id)}>
+                  <td>{request.clientId} 様</td>
+                  <td>{request.requestDate}</td>
+                  <td>{request.deadline}</td>
+                  <td>{request.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   );
 };
 
-export default RequestListView
+export default RequestListView;

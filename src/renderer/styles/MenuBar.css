@@ -1,5 +1,6 @@
 .menu-bar {
-  width: 150px;
+  width: 120px;
+  min-width: 120px;
   background-color: rgb(80, 80, 255);
   padding: 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
@@ -16,4 +17,10 @@
 
 .menu-bar a:hover {
   color: rgb(160, 160, 255);
+}
+
+.menu-bar-setting {
+  position: absolute;
+  bottom: 0;
+  font-size: 32px;
 }

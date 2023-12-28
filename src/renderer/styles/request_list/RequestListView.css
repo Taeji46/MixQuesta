@@ -9,9 +9,9 @@ body {
 }
 
 .add-request-button {
-  background-color: Navy;
+  background-color: rgb(80, 80, 255);
   color: white;
-  border: 2px solid Navy;
+  border: 2px solid rgb(80, 80, 255);
   border-radius: 4px;
   padding: 8px 12px;
   appearance: none;
@@ -30,7 +30,7 @@ body {
 }
 
 input[type='text'] {
-  border: 2px solid Navy;
+  border: 2px solid rgb(80, 80, 255);
   border-radius: 4px;
   min-height: 30px;
   margin-right: 12px;
@@ -45,13 +45,14 @@ input[type='text'] {
   opacity: 0.95;
 }
 
-.container {
+.request-list-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: top;
   width: 100%;
-  max-width: 400px;
-  margin: 40px auto;
+  max-width: none;
+  padding: 40px 40px 40px 40px;
+  border-right: 1px solid gray;
 }
 
 .request-list li {
@@ -87,3 +88,26 @@ a:hover {
   display: flex;
   min-height: 100vh;
 }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+table tr {
+  border-bottom: solid 1px #eee;
+  cursor: pointer;
+}
+
+table tr:hover {
+  background-color: #d4f0fd;
+}
+
+table th,
+table td {
+  text-align: center;
+  width: 25%;
+  padding: 15px 0;
+}
+

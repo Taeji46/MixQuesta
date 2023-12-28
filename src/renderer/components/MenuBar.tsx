@@ -6,7 +6,8 @@ const MenuBar = () => {
     <div className="menu-bar">
       <Link to="/">Home</Link>
       <Link to="/request_list">Requests</Link>
-      <Link to="/">Clients</Link>
+      <Link to="/request_details/:id">Clients</Link>
+      <Link to="/" className="menu-bar-setting">&#9881;</Link>
     </div>
   );
 };

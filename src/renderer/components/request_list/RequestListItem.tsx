@@ -97,28 +97,33 @@ const RequestListItem = (props: { request: Request }) => {
   //   </li>
   // );
   return (
-    <li>
-      <div>
-        <label>
-          <span>顧客ID:</span>
-          <span>{request.clientId}</span>
-        </label>
-      </div>
-      <div>
-        <label>
-          <span>進行状況:</span>
-          <span className={getStatusClassName()}>{request.status}</span>
-        </label>
-      </div>
-      <div>
-        <label>
-          <span>受領:</span>
-          <span className={request.paymentReceived ? 'yes' : 'no'}>
-            {request.paymentReceived ? '受領済' : '未受領'}
-          </span>
-        </label>
-      </div>
-    </li>
+    // <li>
+    //   <div>
+    //     <label>
+    //       <span>{request.clientId}様</span>
+    //     </label>
+    //   </div>
+    //   <div>
+    //     <label>
+    //       <span>進行状況:</span>
+    //       <span className={getStatusClassName()}>{request.status}</span>
+    //     </label>
+    //   </div>
+    //   <div>
+    //     <label>
+    //       <span>受領:</span>
+    //       <span className={request.paymentReceived ? 'yes' : 'no'}>
+    //         {request.paymentReceived ? '受領済' : '未受領'}
+    //       </span>
+    //     </label>
+    //   </div>
+    // </li>
+    <tr>
+      <td>{request.clientId}</td>
+      <td>{request.clientId}</td>
+      <td>{request.clientId}</td>
+      <td>{request.clientId}</td>
+    </tr>
   );
 };
 
