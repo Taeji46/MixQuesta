@@ -2,7 +2,7 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import HomeView from '../components/HomeView';
 import RequestListView from './request_list/RequestListView';
 import RequestDetailsView from './request_details/RequestDetailsView';
-// import EditScreen from '../components/EditScreen';
+import CreateNewRequestView from './request_details/CreateNewRequestView';
 
 export default function App() {
   return (
@@ -10,8 +10,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomeView />} />
         <Route path="/request_list" element={<RequestListView />} />
-        {/* <Route path="/edit/:id" element={<EditScreen />} /> */}
         <Route path="/request_details/:id" element={<RequestDetailsView />} />
+        <Route path="/create_new_request" element={<CreateNewRequestView />} />
       </Routes>
     </Router>
   );

@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import { Request } from '../../types/types';
 import {
   loadRequestList,
   storeRequestList,
-  fetchRequestById,
 } from '../../utils/RequestUtils';
 import MenuBar from '../MenuBar';
 import '../../styles/request_details/RequestDetailsView.css';
 
-const RequestDetailsView = () => {
+const CreateNewRequestView = () => {
   const [requestList, setRequestList] = useState<Array<Request>>([]);
-  const { id } = useParams<{ id: string }>();
   const [clientId, setClientId] = useState<string>('');
   const [requestDate, setRequestDate] = useState<string>('');
   const [deliveryDate, setDeliveryDate] = useState<string>('');
@@ -23,31 +22,23 @@ const RequestDetailsView = () => {
   const [paymentReceived, setPaymentReceived] = useState<boolean>(false);
   const [songName, setSongName] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (id) {
-      loadRequestList().then((loadedRequestList) => {
-        if (loadedRequestList) {
-          setRequestList(loadedRequestList);
-        }
-      });
+    loadRequestList().then((loadedRequestList) => {
+      if (loadedRequestList) {
+        setRequestList(loadedRequestList);
+      }
+    });
 
-      fetchRequestById(id).then((request) => {
-        setClientId(request.clientId);
-        setRequestDate(request.requestDate);
-        setDeliveryDate(request.deliveryDate);
-        setDeadline(request.deadline);
-        setStatus(request.status);
-        setPlan(request.plan);
-        setFee(request.fee);
-        setPaymentMethod(request.paymentMethod);
-        setPaymentReceived(request.paymentReceived);
-        setSongName(request.songName);
-        setNotes(request.notes);
-      });
-    }
-  }, [id]);
+    
+    setDeliveryDate('未納品');
+    setDeadline('なし');
+    setStatus('依頼受付');
+    setPaymentReceived(false);
+  }, []);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -160,30 +151,29 @@ const RequestDetailsView = () => {
     }
   };
 
-  const onSave = () => {
-    if (id) {
-      const updatedRequest: Request = {
-        id: id,
-        clientId: clientId,
-        requestDate: requestDate,
-        deliveryDate: deliveryDate,
-        deadline: deadline,
-        status: status,
-        plan: plan,
-        fee: fee,
-        paymentMethod: paymentMethod,
-        paymentReceived: paymentReceived,
-        songName: songName,
-        notes: notes,
-      };
+  const onSubmit = () => {
+    if (clientId !== '') {
+      const newRequestList: Array<Request> = [
+        {
+          id: uuidv4(),
+          clientId: clientId,
+          requestDate: requestDate,
+          deliveryDate: deliveryDate,
+          deadline: deadline,
+          status: status,
+          plan: plan,
+          fee: fee,
+          paymentMethod: paymentMethod,
+          paymentReceived: paymentReceived,
+          songName: songName,
+          notes: notes,
+        },
+        ...requestList,
+      ];
+      setRequestList(newRequestList);
+      storeRequestList(newRequestList);
 
-      const updatedRequestList = requestList.map((request) =>
-        request.id === id ? updatedRequest : request,
-      );
-
-      setRequestList(updatedRequestList);
-      storeRequestList(updatedRequestList);
-      setIsEditing(false);
+      navigate('/request_list')
     }
   };
 
@@ -248,8 +238,6 @@ const RequestDetailsView = () => {
                     value={deadline}
                     onChange={handleInputChange}
                   />
-                ) : deadline === 'なし' ? (
-                  'なし'
                 ) : (
                   formatDate(new Date(deadline))
                 )}
@@ -369,7 +357,7 @@ const RequestDetailsView = () => {
           </tbody>
         </table>
         {isEditing ? (
-          <button onClick={onSave}>保存</button>
+          <button onClick={onSubmit}>保存</button>
         ) : (
           <button onClick={handleEditClick}>編集</button>
         )}
@@ -378,4 +366,4 @@ const RequestDetailsView = () => {
   );
 };
 
-export default RequestDetailsView;
+export default CreateNewRequestView;

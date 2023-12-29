@@ -8,7 +8,6 @@ import {
 } from '../../utils/RequestUtils';
 import { v4 as uuidv4 } from 'uuid';
 import MenuBar from '../MenuBar';
-import RequestListItem from './RequestListItem';
 import '../../styles/request_list/RequestListView.css';
 
 const RequestListView = () => {
@@ -56,31 +55,33 @@ const RequestListView = () => {
     navigate(url); // ページ遷移
   };
 
+  const formatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    };
+    return date.toLocaleDateString('ja-JP', options);
+  };
+
+  const getStatusClassName = (status: String) => {
+    switch (status) {
+      case '依頼受付':
+        return 'status-requested';
+      case '進行中':
+        return 'status-in-progress';
+      case '納品済':
+        return 'status-delivered';
+      default:
+        return 'unknown-status';
+    }
+  };
+
   return (
     <div className="app-container">
       <MenuBar />
       <div className="request-list-container">
-        <div className="input-field">
-          <input
-            type="text"
-            value={clientId}
-            onChange={(e) => setClientId(e.target.value)}
-          />
-          <button onClick={onSubmit} className="add-request-button">
-            追加
-          </button>
-        </div>
-
-        <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-          {/* <ul className="request-list">
-            {requestList?.map((request) => {
-              return (
-                <Link key={request.id} to={`/request_details/${request.id}`}>
-                  <RequestListItem key={request.id} request={request} />
-                </Link>
-              );
-            })}
-          </ul> */}
+        <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
           <table>
             <thead>
               <tr>
@@ -91,17 +92,33 @@ const RequestListView = () => {
               </tr>
             </thead>
             <tbody>
-              {requestList?.map((request) => (
-                <tr key={request.id} onClick={() => handleRowClick(request.id)}>
-                  <td>{request.clientId} 様</td>
-                  <td>{request.requestDate}</td>
-                  <td>{request.deadline}</td>
-                  <td>{request.status}</td>
-                </tr>
-              ))}
+              {requestList
+                ?.sort(
+                  (a, b) =>
+                    new Date(b.requestDate).getTime() -
+                    new Date(a.requestDate).getTime(),
+                )
+                .map((request) => (
+                  <tr
+                    key={request.id}
+                    onClick={() => handleRowClick(request.id)}
+                  >
+                    <td>{request.clientId} 様</td>
+                    <td>{formatDate(new Date(request.requestDate))}</td>
+                    <td>{request.deadline === 'なし' ? 'なし' : formatDate(new Date(request.deadline))}</td>
+                    <td>
+                      <span className={getStatusClassName(request.status)}>
+                        {request.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
+        <Link to="/create_new_request" className="add-request-button">
+          新規作成
+        </Link>
       </div>
     </div>
   );

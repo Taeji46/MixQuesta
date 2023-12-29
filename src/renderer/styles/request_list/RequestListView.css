@@ -111,3 +111,9 @@ table td {
   padding: 15px 0;
 }
 
+table th {
+    position: sticky;
+    top: 0;
+    background-color: rgb(80, 80, 255);
+    color: white
+}
