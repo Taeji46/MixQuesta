@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Request } from '../../types/types';
 import {
   loadRequestList,
@@ -24,6 +24,8 @@ const RequestDetailsView = () => {
   const [songName, setSongName] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -373,6 +375,7 @@ const RequestDetailsView = () => {
         ) : (
           <button onClick={handleEditClick}>編集</button>
         )}
+        <button onClick={() => navigate(-1)}>戻る</button>
       </div>
     </div>
   );

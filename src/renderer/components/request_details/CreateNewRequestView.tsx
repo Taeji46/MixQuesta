@@ -33,7 +33,6 @@ const CreateNewRequestView = () => {
       }
     });
 
-    
     setDeliveryDate('未納品');
     setDeadline('なし');
     setStatus('依頼受付');
@@ -361,6 +360,7 @@ const CreateNewRequestView = () => {
         ) : (
           <button onClick={handleEditClick}>編集</button>
         )}
+        <button onClick={() => navigate(-1)}>戻る</button>
       </div>
     </div>
   );

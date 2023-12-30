@@ -29,7 +29,7 @@ body {
   opacity: 1;
 }
 
-input[type='text'] {
+/* input[type='text'] {
   border: 2px solid rgb(80, 80, 255);
   border-radius: 4px;
   min-height: 30px;
@@ -43,7 +43,7 @@ input[type='text'] {
   width: 100%;
   display: flex;
   opacity: 0.95;
-}
+} */
 
 .request-list-container {
   display: flex;

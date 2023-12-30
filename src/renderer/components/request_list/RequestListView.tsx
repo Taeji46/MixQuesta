@@ -11,6 +11,7 @@ import MenuBar from '../MenuBar';
 import '../../styles/request_list/RequestListView.css';
 
 const RequestListView = () => {
+  const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.85);
   const [clientId, setClientId] = useState<string>('');
   const [requestList, setRequestList] = useState<Array<Request>>([]);
 
@@ -21,6 +22,16 @@ const RequestListView = () => {
       }
     });
     // resetRequestList();
+
+    const handleResize = () => {
+      setMaxHeight(window.innerHeight * 0.85);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const onSubmit = () => {
@@ -81,7 +92,7 @@ const RequestListView = () => {
     <div className="app-container">
       <MenuBar />
       <div className="request-list-container">
-        <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+        <div style={{ maxHeight: `${maxHeight}px`, overflowY: 'auto' }}>
           <table>
             <thead>
               <tr>
