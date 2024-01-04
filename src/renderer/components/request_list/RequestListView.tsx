@@ -6,11 +6,10 @@ import {
   storeRequestList,
   resetRequestList,
   exportToExcel,
-  importFromExcel,
 } from '../../utils/RequestUtils';
 import { v4 as uuidv4 } from 'uuid';
 import MenuBar from '../MenuBar';
-import '../../styles/request_list/RequestListView.css';
+import styles from '../../styles/request_list/RequestListView.module.css';
 
 const RequestListView = () => {
   const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.85);
@@ -66,22 +65,12 @@ const RequestListView = () => {
     }
   };
 
-  const reflectsExcelData = () => {
-    importFromExcel().then((requestList) => {
-      if (requestList) {
-        setRequestList(requestList);
-        storeRequestList(requestList);
-        exportToExcel(requestList);
-      }
-    });
-  };
-
   return (
-    <div className="app-container">
+    <div className={styles.app_container}>
       <MenuBar />
-      <div className="request-list-container">
+      <div className={styles.request_list_container}>
         <div style={{ maxHeight: `${maxHeight}px`, overflowY: 'auto' }}>
-          <table className="request_list_table">
+          <table className={styles.request_list_table}>
             <thead>
               <tr>
                 <th>顧客</th>
@@ -120,12 +109,9 @@ const RequestListView = () => {
           </table>
         </div>
         {/* <Link to="/create_new_request" className="add-request-button"> */}
-        <Link to="/create_new_request" className="button_solid007">
+        <Link to="/create_new_request" className={styles.button_solid007}>
           <span>新規作成</span>
         </Link>
-        <button className="save_edit_button" onClick={reflectsExcelData}>
-          <span>Excel</span>
-        </button>
       </div>
     </div>
   );

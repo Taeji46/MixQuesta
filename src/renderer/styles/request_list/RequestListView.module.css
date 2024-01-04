@@ -1,3 +1,8 @@
+.app_container {
+  display: flex;
+  min-height: 100vh;
+}
+
 body {
   position: relative;
   color: black;
@@ -8,28 +13,7 @@ body {
   margin: 0;
 }
 
-.add-request-button {
-  background-color: rgb(80, 80, 255);
-  color: white;
-  border: 2px solid rgb(80, 80, 255);
-  border-radius: 4px;
-  padding: 8px 12px;
-  appearance: none;
-  font-size: 12px;
-  transition: all ease-in 0.1s;
-  cursor: pointer;
-  opacity: 0.9;
-  line-height: 1;
-  min-width: 60px;
-}
-
-.add-request-button:hover {
-  background-color: gray;
-  border: 2px solid gray;
-  opacity: 1;
-}
-
-.request-list-container {
+.request_list_container {
   display: flex;
   flex-direction: column;
   justify-content: top;
@@ -39,12 +23,12 @@ body {
   border-right: 1px solid gray;
 }
 
-.request-list li {
+.request_list li {
   line-height: 2;
 }
 
-.request-list li input,
-.request-list li span {
+.request_list li input,
+.request_list li span {
   cursor: pointer;
 }
 
@@ -66,11 +50,6 @@ a {
 a:hover {
   opacity: 1;
   text-decoration: none;
-}
-
-.app-container {
-  display: flex;
-  min-height: 100vh;
 }
 
 .request_list_table {

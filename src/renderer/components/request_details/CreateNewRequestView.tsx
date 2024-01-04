@@ -7,7 +7,7 @@ import {
   storeRequestList,
 } from '../../utils/RequestUtils';
 import MenuBar from '../MenuBar';
-import '../../styles/request_details/RequestDetailsView.css';
+import styles from '../../styles/request_details/RequestDetailsView.module.css';
 
 const CreateNewRequestView = () => {
   const [requestList, setRequestList] = useState<Array<Request>>([]);
@@ -177,10 +177,10 @@ const CreateNewRequestView = () => {
   };
 
   return (
-    <div className="app-container">
+    <div className={styles.app_container}>
       <MenuBar />
-      <div className="request-details-container">
-        <table className="request_details_table">
+      <div className={styles.request_details_container}>
+        <table className={styles.request_details_table}>
           <tbody>
             <tr>
               <th>顧客ID</th>
@@ -355,12 +355,20 @@ const CreateNewRequestView = () => {
             </tr>
           </tbody>
         </table>
-        {isEditing ? (
-          <button onClick={onSubmit}>保存</button>
-        ) : (
-          <button onClick={handleEditClick}>編集</button>
-        )}
-        <button onClick={() => navigate(-1)}>戻る</button>
+        <div className={styles.button_container}>
+          {isEditing ? (
+            <button className={styles.save_edit_button}>
+              <span>保存</span>
+            </button>
+          ) : (
+            <button className={styles.save_edit_button} onClick={handleEditClick}>
+              <span>編集</span>
+            </button>
+          )}
+        </div>
+        <button className={styles.back_button} onClick={() => navigate(-1)}>
+          <span>戻る</span>
+        </button>
       </div>
     </div>
   );

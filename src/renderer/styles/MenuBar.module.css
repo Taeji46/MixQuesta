@@ -1,12 +1,13 @@
-.menu-bar {
+.menu_bar {
   width: 120px;
   min-width: 120px;
+  min-height: 100vh;
   background-color: rgb(80, 80, 255);
   padding: 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.menu-bar a {
+.menu_bar a {
   display: block;
   margin-bottom: 10px;
   text-decoration: none;
@@ -15,11 +16,11 @@
   transition: all ease-in 0.1s;
 }
 
-.menu-bar a:hover {
+.menu_bar a:hover {
   color: rgb(160, 160, 255);
 }
 
-.menu-bar-setting {
+.menu_bar_setting {
   position: absolute;
   bottom: 0;
   font-size: 32px;

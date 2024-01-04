@@ -1,3 +1,8 @@
+.app_container {
+  display: flex;
+  min-height: 100vh;
+}
+
 body {
   position: relative;
   color: black;
@@ -58,7 +63,7 @@ table select {
   opacity: 0.95;
 }
 
-.request-details-container {
+.request_details_container {
   display: flex;
   flex-direction: column;
   justify-content: top;
@@ -68,12 +73,12 @@ table select {
   border-right: 1px solid gray;
 }
 
-.request-list li {
+.request_list li {
   line-height: 2;
 }
 
-.request-list li input,
-.request-list li span {
+.request_list li input,
+.request_list li span {
   cursor: pointer;
 }
 
@@ -95,11 +100,6 @@ a {
 a:hover {
   opacity: 1;
   text-decoration: none;
-}
-
-.app-container {
-  display: flex;
-  min-height: 100vh;
 }
 
 span.yes {
@@ -155,7 +155,7 @@ span.no {
 
 .save_edit_button {
   bottom: 0;
-  display:inline-block;
+  display: inline-block;
   padding: 10px 10px 10px 10px;
   background: transparent;
   border: none;
@@ -208,14 +208,16 @@ span.no {
 .back_button span:hover {
   background: rgb(255, 80, 80);
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px -5px rgb(0 0 0 / 15%), 0 0 5px rgb(0 0 0 / 10%);
+  box-shadow:
+    0 15px 30px -5px rgb(0 0 0 / 15%),
+    0 0 5px rgb(0 0 0 / 10%);
 }
 
-.button-container {
+.button_container {
   text-align: center;
 }
 
-.button-container2 {
+.button_container2 {
   text-align: left;
   bottom: 0;
 }
