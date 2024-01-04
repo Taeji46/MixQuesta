@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { Request } from '../../types/types';
-import {
-  loadRequestList,
-  storeRequestList,
-} from '../../utils/RequestUtils';
+import { loadRequestList, storeRequestList } from '../../utils/RequestUtils';
 import MenuBar from '../MenuBar';
 import styles from '../../styles/request_details/RequestDetailsView.module.css';
 
@@ -44,7 +41,9 @@ const CreateNewRequestView = () => {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => {
     const { name, value, type } = e.target;
 
@@ -61,6 +60,9 @@ const CreateNewRequestView = () => {
         break;
       case 'select-one':
         handleSelectChange(name, value);
+        break;
+      case 'textarea':
+        handleTextChange(name, value);
         break;
       default:
         break;
@@ -140,13 +142,13 @@ const CreateNewRequestView = () => {
   const getStatusClassName = () => {
     switch (status) {
       case '依頼受付':
-        return 'status-requested';
+        return 'status_requested';
       case '進行中':
-        return 'status-in-progress';
+        return 'status_in-progress';
       case '納品済':
-        return 'status-delivered';
+        return 'status_delivered';
       default:
-        return 'unknown-status';
+        return 'unknown_status';
     }
   };
 
@@ -172,7 +174,7 @@ const CreateNewRequestView = () => {
       setRequestList(newRequestList);
       storeRequestList(newRequestList);
 
-      navigate('/request_list')
+      navigate('/request_list');
     }
   };
 
@@ -342,8 +344,7 @@ const CreateNewRequestView = () => {
               <th>備考</th>
               <td>
                 {isEditing ? (
-                  <input
-                    type="text"
+                  <textarea
                     name="notes"
                     value={notes}
                     onChange={handleInputChange}
@@ -357,11 +358,14 @@ const CreateNewRequestView = () => {
         </table>
         <div className={styles.button_container}>
           {isEditing ? (
-            <button className={styles.save_edit_button}>
+            <button className={styles.save_edit_button} onClick={onSubmit}>
               <span>保存</span>
             </button>
           ) : (
-            <button className={styles.save_edit_button} onClick={handleEditClick}>
+            <button
+              className={styles.save_edit_button}
+              onClick={handleEditClick}
+            >
               <span>編集</span>
             </button>
           )}

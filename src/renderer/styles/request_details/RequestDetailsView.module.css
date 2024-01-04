@@ -57,6 +57,16 @@ table select {
   width: 100%;
 }
 
+table textarea {
+  border: 1px solid rgb(80, 80, 255);
+  border-radius: 4px;
+  margin-right: 12px;
+  opacity: 0.9;
+  padding: 4px 12px;
+  width: 80%;
+  height: 50px
+}
+
 .input-field {
   width: 100%;
   display: flex;
@@ -110,15 +120,15 @@ span.no {
   color: red;
 }
 
-.status-requested {
+.status_requested {
   color: red;
 }
 
-.status-in-progress {
+.status_in-progress {
   color: blue;
 }
 
-.status-delivered {
+.status_delivered {
   color: green;
 }
 

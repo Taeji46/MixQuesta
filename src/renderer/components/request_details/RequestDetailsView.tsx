@@ -61,7 +61,7 @@ const RequestDetailsView = () => {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ) => {
     const { name, value, type } = e.target;
 
@@ -78,6 +78,9 @@ const RequestDetailsView = () => {
         break;
       case 'select-one':
         handleSelectChange(name, value);
+        break;
+        case 'textarea':
+        handleTextChange(name, value);
         break;
       default:
         break;
@@ -143,7 +146,7 @@ const RequestDetailsView = () => {
     switch (field) {
       case 'status':
         setStatus(value);
-        setDeliveryDate(value === '納品済' ? '2024-01-01' : '未');
+        setDeliveryDate(value === '納品済' ? '2024-01-01' : '未納');
         break;
       default:
         break;
@@ -162,13 +165,13 @@ const RequestDetailsView = () => {
   const getStatusClassName = () => {
     switch (status) {
       case '依頼受付':
-        return 'status-requested';
+        return 'status_requested';
       case '進行中':
-        return 'status-in-progress';
+        return 'status_in-progress';
       case '納品済':
-        return 'status-delivered';
+        return 'status_delivered';
       default:
-        return 'unknown-status';
+        return 'unknown_status';
     }
   };
 
@@ -179,7 +182,7 @@ const RequestDetailsView = () => {
         clientId: clientId,
         requestDate: requestDate,
         deliveryDate: deliveryDate,
-        deadline: hasDeadline ? deadline : '',
+        deadline: deadline,
         status: status,
         plan: plan,
         fee: fee,
@@ -237,21 +240,26 @@ const RequestDetailsView = () => {
             </tr>
             {status === '納品済' ? (
               <tr>
-              <th>納品日</th>
-              <td>
-                {isEditing ? (
-                  <input
-                    type="date"
-                    name="deliveryDate"
-                    value={deliveryDate}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  formatDate(new Date(deliveryDate))
-                )}
-              </td>
-            </tr>
-            ) : (null)}
+                <th>納品日</th>
+                <td>
+                  {isEditing ? (
+                    <input
+                      type="date"
+                      name="deliveryDate"
+                      value={deliveryDate}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    formatDate(new Date(deliveryDate))
+                  )}
+                </td>
+              </tr>
+            ) : (
+              <tr>
+                <th>納品日</th>
+                <td>未納</td>
+              </tr>
+            )}
             <tr>
               <th>希望納期</th>
               <td>
@@ -295,7 +303,7 @@ const RequestDetailsView = () => {
                     <option value="納品済">納品済</option>
                   </select>
                 ) : (
-                  <span className={getStatusClassName()}>{status}</span>
+                  <span className={styles[getStatusClassName()]}>{status}</span>
                 )}
               </td>
             </tr>
@@ -381,8 +389,7 @@ const RequestDetailsView = () => {
               <th>備考</th>
               <td>
                 {isEditing ? (
-                  <input
-                    type="text"
+                  <textarea
                     name="notes"
                     value={notes}
                     onChange={handleInputChange}
@@ -400,7 +407,10 @@ const RequestDetailsView = () => {
               <span>保存</span>
             </button>
           ) : (
-            <button className={styles.save_edit_button} onClick={handleEditClick}>
+            <button
+              className={styles.save_edit_button}
+              onClick={handleEditClick}
+            >
               <span>編集</span>
             </button>
           )}

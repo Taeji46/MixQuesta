@@ -19,7 +19,7 @@ const RequestListView = () => {
     loadRequestList().then((requestList) => {
       if (requestList) {
         setRequestList(requestList);
-        exportToExcel(requestList);
+        // exportToExcel(requestList);
       }
     });
 
@@ -55,13 +55,13 @@ const RequestListView = () => {
   const getStatusClassName = (status: String) => {
     switch (status) {
       case '依頼受付':
-        return 'status-requested';
+        return 'status_requested';
       case '進行中':
-        return 'status-in-progress';
+        return 'status_in-progress';
       case '納品済':
-        return 'status-delivered';
+        return 'status_delivered';
       default:
-        return 'unknown-status';
+        return 'unknown_status';
     }
   };
 
@@ -76,6 +76,7 @@ const RequestListView = () => {
                 <th>顧客</th>
                 <th>依頼日</th>
                 <th>希望納期</th>
+                <th>プラン</th>
                 <th>進行状況</th>
               </tr>
             </thead>
@@ -98,8 +99,9 @@ const RequestListView = () => {
                         ? 'なし'
                         : formatDate(new Date(request.deadline))}
                     </td>
+                    <td>{request.plan}</td>
                     <td>
-                      <span className={getStatusClassName(request.status)}>
+                      <span className={styles[getStatusClassName(request.status)]}>
                         {request.status}
                       </span>
                     </td>

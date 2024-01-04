@@ -96,6 +96,8 @@
     }
   },
   "dependencies": {
+    "csv-parse": "^5.5.3",
+    "csv-parser": "^3.0.0",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-store": "^8.1.0",

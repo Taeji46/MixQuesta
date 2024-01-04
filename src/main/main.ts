@@ -16,6 +16,8 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import Store, { Schema } from 'electron-store';
 import * as xlsx from 'xlsx';
+import * as fs from 'fs';
+import * as csv from 'csv-parser';
 import { Request } from '../renderer/types/types';
 
 class AppUpdater {
@@ -155,34 +157,133 @@ ipcMain.handle('resetRequestList', async (event) => {
   storeData.set('requestList', null);
 });
 
-ipcMain.handle('exportToExcel', async (event, data: Request[]) => {
-  const workbook = xlsx.utils.book_new();
+// ipcMain.handle('exportToExcel', async (event, requestData: Request[]) => {
+//   const workbook = xlsx.utils.book_new();
 
-  const headerRow = ['UUID', '顧客ID', '依頼日', '納品日', '希望納期', '進行状況', 'プラン', '料金', '支払い方法', '受領', '曲名', '備考'];
-  
-  const sheetData = [headerRow, ...data.map((request: Request) => [
-    request.id,
-    request.clientId,
-    request.requestDate,
-    request.deliveryDate,
-    request.deadline,
-    request.status,
-    request.plan,
-    request.fee,
-    request.paymentMethod,
-    request.paymentReceived,
-    request.songName,
-    request.notes,
-  ])];
+//   const headerRow = ['UUID', '顧客ID', '依頼日', '納品日', '希望納期', '進行状況', 'プラン', '料金', '支払い方法', '受領', '曲名', '備考'];
 
-  xlsx.utils.book_append_sheet(
-    workbook,
-    xlsx.utils.aoa_to_sheet(sheetData),
-    'Request List',
-  );
+//   const sheetData = [headerRow, ...requestData.map((request: Request) => [
+//     request.id,
+//     request.clientId,
+//     request.requestDate,
+//     request.deliveryDate,
+//     request.deadline,
+//     request.status,
+//     request.plan,
+//     request.fee,
+//     request.paymentMethod,
+//     request.paymentReceived,
+//     request.songName,
+//     request.notes,
+//   ])];
 
-  xlsx.writeFile(workbook, 'output.xlsx');
+//   xlsx.utils.book_append_sheet(
+//     workbook,
+//     xlsx.utils.aoa_to_sheet(sheetData),
+//     'Request List',
+//   );
+
+//   xlsx.writeFile(workbook, 'output.xlsx');
+// });
+
+ipcMain.handle('exportToExcel', async (event, requestData: Request[]) => {
+  try {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = ('0' + (now.getMonth() + 1)).slice(-2);
+    const day = ('0' + now.getDate()).slice(-2);
+    const hour = ('0' + now.getHours()).slice(-2);
+    const minute = ('0' + now.getMinutes()).slice(-2);
+    const second = ('0' + now.getSeconds()).slice(-2);
+
+    const formattedDate = `${year}${month}${day}_${hour}${minute}${second}`;
+
+    const { filePath } = await dialog.showSaveDialog({
+      defaultPath: `MixQuesta_${formattedDate}.xlsx`,
+      filters: [{ name: 'Excel Files', extensions: ['xlsx'] }],
+    });
+
+    if (!filePath) {
+      return;
+    }
+
+    const workbook = xlsx.utils.book_new();
+
+    const headerRow = [
+      'UUID',
+      '顧客ID',
+      '依頼日',
+      '納品日',
+      '希望納期',
+      '進行状況',
+      'プラン',
+      '料金',
+      '支払い方法',
+      '受領',
+      '曲名',
+      '備考',
+    ];
+
+    const sheetData = [
+      headerRow,
+      ...requestData?.sort(
+        (a, b) =>
+          new Date(a.requestDate).getTime() -
+          new Date(b.requestDate).getTime(),
+      ).map((request: Request) => [
+        request.id,
+        request.clientId,
+        request.requestDate,
+        request.deliveryDate,
+        request.deadline,
+        request.status,
+        request.plan,
+        request.fee,
+        request.paymentMethod,
+        request.paymentReceived,
+        request.songName,
+        request.notes,
+      ]),
+    ];
+
+    xlsx.utils.book_append_sheet(
+      workbook,
+      xlsx.utils.aoa_to_sheet(sheetData),
+      'Request List',
+    );
+
+    xlsx.writeFile(workbook, filePath);
+  } catch (e) {
+    console.error(`エラー発生: ${e}`);
+    throw new Error('Error exporting to Excel');
+  }
 });
+
+function serialToDateString(serial: string | number): string {
+  if (typeof serial === 'string') {
+    // 日付のデータが文字列形式(string型)のとき
+    if (serial.includes('/')) {
+      // 日付の文字列が "/" 区切りのとき
+      const [year, month, day] = serial
+        .split('/')
+        .map((part) => part.padStart(2, '0'));
+      return `${year}-${month}-${day}`;
+    } else if (serial.includes('-')) {
+      // 日付の文字列が "-" 区切りのとき
+      const [year, month, day] = serial
+        .split('-')
+        .map((part) => part.padStart(2, '0'));
+      return `${year}-${month}-${day}`;
+    } else {
+      return serial;
+    }
+  }
+
+  // 日付のデータがシリアル形式(number型)のとき
+  const baseDate = new Date(1899, 11, 31);
+  const date = new Date(baseDate.getTime() + serial * 24 * 60 * 60 * 1000);
+  return date.toISOString().split('T')[0];
+}
 
 ipcMain.handle('importFromExcel', async (event) => {
   try {
@@ -197,16 +298,19 @@ ipcMain.handle('importFromExcel', async (event) => {
 
     const workbook = xlsx.readFile(filePaths[0]);
 
-    const jsonData = xlsx.utils.sheet_to_json(workbook.Sheets['Request List'], { header: 1, defval: null });
+    const jsonData = xlsx.utils.sheet_to_json(workbook.Sheets['Request List'], {
+      header: 1,
+      defval: null,
+    });
 
     const data: Request[] = jsonData
       .slice(1) // 1行目を無視
       .map((row: any) => ({
         id: row[0],
         clientId: row[1],
-        requestDate: row[2],
-        deliveryDate: row[3],
-        deadline: row[4],
+        requestDate: serialToDateString(row[2]),
+        deliveryDate: serialToDateString(row[3]),
+        deadline: serialToDateString(row[4]),
         status: row[5],
         plan: row[6],
         fee: row[7],
