@@ -9,12 +9,14 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import Store, { Schema } from 'electron-store';
+import * as xlsx from 'xlsx';
+import { Request } from '../renderer/types/types';
 
 class AppUpdater {
   constructor() {
@@ -139,11 +141,9 @@ app
   })
   .catch(console.log);
 
-
-
 const storeData = new Store();
 
-ipcMain.handle('loadRequestList', async (event, data) => {
+ipcMain.handle('loadRequestList', async (event) => {
   return storeData.get('requestList');
 });
 
@@ -153,4 +153,72 @@ ipcMain.handle('storeRequestList', async (event, data) => {
 
 ipcMain.handle('resetRequestList', async (event) => {
   storeData.set('requestList', null);
+});
+
+ipcMain.handle('exportToExcel', async (event, data: Request[]) => {
+  const workbook = xlsx.utils.book_new();
+
+  const headerRow = ['UUID', '顧客ID', '依頼日', '納品日', '希望納期', '進行状況', 'プラン', '料金', '支払い方法', '受領', '曲名', '備考'];
+  
+  const sheetData = [headerRow, ...data.map((request: Request) => [
+    request.id,
+    request.clientId,
+    request.requestDate,
+    request.deliveryDate,
+    request.deadline,
+    request.status,
+    request.plan,
+    request.fee,
+    request.paymentMethod,
+    request.paymentReceived,
+    request.songName,
+    request.notes,
+  ])];
+
+  xlsx.utils.book_append_sheet(
+    workbook,
+    xlsx.utils.aoa_to_sheet(sheetData),
+    'Request List',
+  );
+
+  xlsx.writeFile(workbook, 'output.xlsx');
+});
+
+ipcMain.handle('importFromExcel', async (event) => {
+  try {
+    const { filePaths } = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: [{ name: 'Excel Files', extensions: ['xlsx', 'xls'] }],
+    });
+
+    if (!filePaths || filePaths.length === 0) {
+      return null;
+    }
+
+    const workbook = xlsx.readFile(filePaths[0]);
+
+    const jsonData = xlsx.utils.sheet_to_json(workbook.Sheets['Request List'], { header: 1, defval: null });
+
+    const data: Request[] = jsonData
+      .slice(1) // 1行目を無視
+      .map((row: any) => ({
+        id: row[0],
+        clientId: row[1],
+        requestDate: row[2],
+        deliveryDate: row[3],
+        deadline: row[4],
+        status: row[5],
+        plan: row[6],
+        fee: row[7],
+        paymentMethod: row[8],
+        paymentReceived: row[9],
+        songName: row[10],
+        notes: row[11],
+      }));
+
+    return data;
+  } catch (e) {
+    console.error(`エラー発生: ${e}`);
+    throw new Error('Error reading Excel file');
+  }
 });

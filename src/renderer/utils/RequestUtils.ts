@@ -3,26 +3,41 @@ import { Request } from '../types/types';
 interface ElectronWindow extends Window {
   db: {
     loadRequestList: () => Promise<Array<Request> | null>;
-    storeRequestList: (todoList: Array<Request>) => Promise<void>;
+    storeRequestList: (requestList: Array<Request>) => Promise<void>;
     resetRequestList: () => Promise<void>;
+    exportToExcel: (requestList: Array<Request>) => Promise<void>;
+    importFromExcel: () => Promise<Array<Request> | null>;
   };
 }
 
 declare const window: ElectronWindow;
 
 export const loadRequestList = async (): Promise<Array<Request> | null> => {
-  const todoList = await window.db.loadRequestList();
-  return todoList;
+  const requestList = await window.db.loadRequestList();
+  console.log("inLoad");
+  return requestList;
 };
 
 export const storeRequestList = async (
-  todoList: Array<Request>,
+  requestList: Array<Request>,
 ): Promise<void> => {
-  await window.db.storeRequestList(todoList);
+  await window.db.storeRequestList(requestList);
 };
 
 export const resetRequestList = async (): Promise<void> => {
   await window.db.resetRequestList();
+};
+
+export const exportToExcel = async (
+  requestList: Array<Request>,
+): Promise<void> => {
+  console.log("inExcel");
+  await window.db.exportToExcel(requestList);
+};
+
+export const importFromExcel = async (): Promise<Array<Request> | null> => {
+  const requestList = await window.db.importFromExcel();
+  return requestList;
 };
 
 export const defaultRequest = {

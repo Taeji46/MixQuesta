@@ -5,6 +5,8 @@ import {
   loadRequestList,
   storeRequestList,
   resetRequestList,
+  exportToExcel,
+  importFromExcel,
 } from '../../utils/RequestUtils';
 import { v4 as uuidv4 } from 'uuid';
 import MenuBar from '../MenuBar';
@@ -12,15 +14,16 @@ import '../../styles/request_list/RequestListView.css';
 
 const RequestListView = () => {
   const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.85);
-  const [clientId, setClientId] = useState<string>('');
   const [requestList, setRequestList] = useState<Array<Request>>([]);
 
   useEffect(() => {
     loadRequestList().then((requestList) => {
       if (requestList) {
         setRequestList(requestList);
+        exportToExcel(requestList);
       }
     });
+
     // resetRequestList();
 
     const handleResize = () => {
@@ -33,31 +36,6 @@ const RequestListView = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  const onSubmit = () => {
-    if (clientId !== '') {
-      const newRequestList: Array<Request> = [
-        {
-          id: uuidv4(),
-          clientId: clientId,
-          requestDate: '2023-02-01',
-          deliveryDate: '2023-03-01',
-          deadline: '2023-04-01',
-          status: '進行中',
-          plan: 'フルコーラス',
-          fee: 5000,
-          paymentMethod: 'PayPal',
-          paymentReceived: true,
-          songName: 'Sample Song 2',
-          notes: 'Another sample request in progress.',
-        },
-        ...requestList,
-      ];
-      setRequestList(newRequestList);
-      storeRequestList(newRequestList);
-      setClientId('');
-    }
-  };
 
   const navigate = useNavigate();
 
@@ -88,6 +66,16 @@ const RequestListView = () => {
     }
   };
 
+  const reflectsExcelData = () => {
+    importFromExcel().then((requestList) => {
+      if (requestList) {
+        setRequestList(requestList);
+        storeRequestList(requestList);
+        exportToExcel(requestList);
+      }
+    });
+  };
+
   return (
     <div className="app-container">
       <MenuBar />
@@ -116,7 +104,11 @@ const RequestListView = () => {
                   >
                     <td>{request.clientId} 様</td>
                     <td>{formatDate(new Date(request.requestDate))}</td>
-                    <td>{request.deadline === 'なし' ? 'なし' : formatDate(new Date(request.deadline))}</td>
+                    <td>
+                      {request.deadline === 'なし'
+                        ? 'なし'
+                        : formatDate(new Date(request.deadline))}
+                    </td>
                     <td>
                       <span className={getStatusClassName(request.status)}>
                         {request.status}
@@ -131,6 +123,9 @@ const RequestListView = () => {
         <Link to="/create_new_request" className="button_solid007">
           <span>新規作成</span>
         </Link>
+        <button className="save_edit_button" onClick={reflectsExcelData}>
+          <span>Excel</span>
+        </button>
       </div>
     </div>
   );

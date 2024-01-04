@@ -30,7 +30,10 @@ export type ElectronHandler = typeof electronHandler;
 
 contextBridge.exposeInMainWorld('db', {
   loadRequestList: () => ipcRenderer.invoke('loadRequestList'),
-  storeRequestList: (todoList: Array<object>) =>
-    ipcRenderer.invoke('storeRequestList', todoList),
+  storeRequestList: (requestList: Array<object>) =>
+    ipcRenderer.invoke('storeRequestList', requestList),
   resetRequestList: () => ipcRenderer.invoke('resetRequestList'),
+  exportToExcel: (requestList: Array<object>) =>
+    ipcRenderer.invoke('exportToExcel', requestList),
+  importFromExcel: () => ipcRenderer.invoke('importFromExcel'),
 });

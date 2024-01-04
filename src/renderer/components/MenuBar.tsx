@@ -7,7 +7,7 @@ const MenuBar = () => {
       <Link to="/">Home</Link>
       <Link to="/request_list">Requests</Link>
       <Link to="/">Clients</Link>
-      <Link to="/" className="menu-bar-setting">&#9881;</Link>
+      <Link to="/settings" className="menu-bar-setting">&#9881;</Link>
     </div>
   );
 };
