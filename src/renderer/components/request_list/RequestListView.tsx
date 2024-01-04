@@ -93,12 +93,12 @@ const RequestListView = () => {
       <MenuBar />
       <div className="request-list-container">
         <div style={{ maxHeight: `${maxHeight}px`, overflowY: 'auto' }}>
-          <table>
+          <table className="request_list_table">
             <thead>
               <tr>
                 <th>顧客</th>
                 <th>依頼日</th>
-                <th>納期</th>
+                <th>希望納期</th>
                 <th>進行状況</th>
               </tr>
             </thead>
@@ -127,8 +127,9 @@ const RequestListView = () => {
             </tbody>
           </table>
         </div>
-        <Link to="/create_new_request" className="add-request-button">
-          新規作成
+        {/* <Link to="/create_new_request" className="add-request-button"> */}
+        <Link to="/create_new_request" className="button_solid007">
+          <span>新規作成</span>
         </Link>
       </div>
     </div>

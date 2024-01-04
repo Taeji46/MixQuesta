@@ -180,7 +180,7 @@ const CreateNewRequestView = () => {
     <div className="app-container">
       <MenuBar />
       <div className="request-details-container">
-        <table>
+        <table className="request_details_table">
           <tbody>
             <tr>
               <th>顧客ID</th>
@@ -228,7 +228,7 @@ const CreateNewRequestView = () => {
               </td>
             </tr>
             <tr>
-              <th>納期</th>
+              <th>希望納期</th>
               <td>
                 {isEditing ? (
                   <input

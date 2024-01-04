@@ -23,6 +23,9 @@ const RequestDetailsView = () => {
   const [paymentReceived, setPaymentReceived] = useState<boolean>(false);
   const [songName, setSongName] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
+
+  const [hasDeadline, setHasDeadline] = useState<boolean>(true);
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -48,6 +51,8 @@ const RequestDetailsView = () => {
         setSongName(request.songName);
         setNotes(request.notes);
       });
+
+      setHasDeadline(deadline === 'なし' ? false : true);
     }
   }, [id]);
 
@@ -125,6 +130,10 @@ const RequestDetailsView = () => {
       case 'paymentReceived':
         setPaymentReceived(!paymentReceived);
         break;
+      case 'hasDeadline':
+        setHasDeadline(!hasDeadline);
+        setDeadline(!hasDeadline ? '2024-01-01' : 'なし');
+        break;
       default:
         break;
     }
@@ -134,6 +143,7 @@ const RequestDetailsView = () => {
     switch (field) {
       case 'status':
         setStatus(value);
+        setDeliveryDate(value === '納品済' ? '2024-01-01' : '未');
         break;
       default:
         break;
@@ -169,7 +179,7 @@ const RequestDetailsView = () => {
         clientId: clientId,
         requestDate: requestDate,
         deliveryDate: deliveryDate,
-        deadline: deadline,
+        deadline: hasDeadline ? deadline : '',
         status: status,
         plan: plan,
         fee: fee,
@@ -193,7 +203,7 @@ const RequestDetailsView = () => {
     <div className="app-container">
       <MenuBar />
       <div className="request-details-container">
-        <table>
+        <table className="request_details_table">
           <tbody>
             <tr>
               <th>顧客ID</th>
@@ -225,7 +235,8 @@ const RequestDetailsView = () => {
                 )}
               </td>
             </tr>
-            <tr>
+            {status === '納品済' ? (
+              <tr>
               <th>納品日</th>
               <td>
                 {isEditing ? (
@@ -240,16 +251,29 @@ const RequestDetailsView = () => {
                 )}
               </td>
             </tr>
+            ) : (null)}
             <tr>
-              <th>納期</th>
+              <th>希望納期</th>
               <td>
                 {isEditing ? (
-                  <input
-                    type="date"
-                    name="deadline"
-                    value={deadline}
-                    onChange={handleInputChange}
-                  />
+                  <div>
+                    <input
+                      type="checkbox"
+                      name="hasDeadline"
+                      checked={hasDeadline}
+                      onChange={handleInputChange}
+                    />
+                    {hasDeadline ? (
+                      <input
+                        type="date"
+                        name="deadline"
+                        value={deadline}
+                        onChange={handleInputChange}
+                      />
+                    ) : (
+                      <span>納期設定</span>
+                    )}
+                  </div>
                 ) : deadline === 'なし' ? (
                   'なし'
                 ) : (
@@ -370,12 +394,20 @@ const RequestDetailsView = () => {
             </tr>
           </tbody>
         </table>
-        {isEditing ? (
-          <button onClick={onSave}>保存</button>
-        ) : (
-          <button onClick={handleEditClick}>編集</button>
-        )}
-        <button onClick={() => navigate(-1)}>戻る</button>
+        <div className="button-container">
+          {isEditing ? (
+            <button className="save_edit_button" onClick={onSave}>
+              <span>保存</span>
+            </button>
+          ) : (
+            <button className="save_edit_button" onClick={handleEditClick}>
+              <span>編集</span>
+            </button>
+          )}
+        </div>
+        <button className="back_button" onClick={() => navigate(-1)}>
+          <span>戻る</span>
+        </button>
       </div>
     </div>
   );
