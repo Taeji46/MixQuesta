@@ -5,6 +5,7 @@
   background-color: rgb(80, 80, 255);
   padding: 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  font-size: large;
 }
 
 .menu_bar a {

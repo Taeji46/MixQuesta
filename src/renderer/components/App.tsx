@@ -1,9 +1,12 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+
 import HomeView from '../components/HomeView';
 import RequestListView from './request_list/RequestListView';
 import RequestDetailsView from './request_details/RequestDetailsView';
 import CreateNewRequestView from './request_details/CreateNewRequestView';
 import SettingsView from './SettingsView';
+
+import '../styles/App.css';
 
 export default function App() {
   return (

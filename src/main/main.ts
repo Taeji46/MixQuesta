@@ -186,6 +186,28 @@ ipcMain.handle('resetRequestList', async (event) => {
 //   xlsx.writeFile(workbook, 'output.xlsx');
 // });
 
+const showSuccessAlert = (message: string) => {
+  const successDialogOptions = {
+    type: 'info' as const,
+    buttons: ['OK'],
+    title: '成功',
+    message: message,
+  };
+
+  dialog.showMessageBox(successDialogOptions);
+};
+
+const showErrorAlert = (message: string) => {
+  const errorDialogOptions = {
+    type: 'error' as const,
+    buttons: ['OK'],
+    title: 'エラー',
+    message: message,
+  };
+
+  dialog.showMessageBox(errorDialogOptions);
+};
+
 ipcMain.handle('exportToExcel', async (event, requestData: Request[]) => {
   try {
     const now = new Date();
@@ -253,13 +275,18 @@ ipcMain.handle('exportToExcel', async (event, requestData: Request[]) => {
     );
 
     xlsx.writeFile(workbook, filePath);
+
+    const successMessage = 'エクスポートに成功しました。';
+    showSuccessAlert(successMessage);
   } catch (e) {
+    const errorMessage = 'エクスポートに失敗しました。';
+    showErrorAlert(errorMessage);
     console.error(`エラー発生: ${e}`);
     throw new Error('Error exporting to Excel');
   }
 });
 
-function serialToDateString(serial: string | number): string {
+const serialToDateString = (serial: string | number): string => {
   if (typeof serial === 'string') {
     // 日付のデータが文字列形式(string型)のとき
     if (serial.includes('/')) {
@@ -320,8 +347,13 @@ ipcMain.handle('importFromExcel', async (event) => {
         notes: row[11],
       }));
 
+      const successMessage = 'インポートに成功しました。';
+      showSuccessAlert(successMessage);
+
     return data;
   } catch (e) {
+    const errorMessage = 'インポートに失敗しました。';
+    showErrorAlert(errorMessage);
     console.error(`エラー発生: ${e}`);
     throw new Error('Error reading Excel file');
   }

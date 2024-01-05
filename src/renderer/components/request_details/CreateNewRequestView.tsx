@@ -309,7 +309,7 @@ const CreateNewRequestView = () => {
               </td>
             </tr>
             <tr>
-              <th>支払い</th>
+              <th>受領</th>
               <td>
                 {isEditing ? (
                   <input

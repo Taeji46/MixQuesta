@@ -61,7 +61,9 @@ const RequestDetailsView = () => {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => {
     const { name, value, type } = e.target;
 
@@ -79,7 +81,7 @@ const RequestDetailsView = () => {
       case 'select-one':
         handleSelectChange(name, value);
         break;
-        case 'textarea':
+      case 'textarea':
         handleTextChange(name, value);
         break;
       default:
@@ -199,6 +201,15 @@ const RequestDetailsView = () => {
       setRequestList(updatedRequestList);
       storeRequestList(updatedRequestList);
       setIsEditing(false);
+    }
+  };
+
+  const handleDelete = () => {
+    const confirmDeletion = window.confirm('本当に削除しますか？');
+    
+    if (confirmDeletion) {
+      storeRequestList(requestList.filter((request) => request.id !== id));
+      navigate('/request_list');
     }
   };
 
@@ -354,7 +365,7 @@ const RequestDetailsView = () => {
               </td>
             </tr>
             <tr>
-              <th>支払い</th>
+              <th>受領</th>
               <td>
                 {isEditing ? (
                   <input
@@ -402,6 +413,11 @@ const RequestDetailsView = () => {
           </tbody>
         </table>
         <div className={styles.button_container}>
+          {isEditing ? (
+            <button className={styles.delete_button} onClick={handleDelete}>
+              <span>削除</span>
+            </button>
+          ) : null}
           {isEditing ? (
             <button className={styles.save_edit_button} onClick={onSave}>
               <span>保存</span>
