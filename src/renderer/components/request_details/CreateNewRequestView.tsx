@@ -19,6 +19,7 @@ const CreateNewRequestView = () => {
   const [paymentReceived, setPaymentReceived] = useState<boolean>(false);
   const [songName, setSongName] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
+  
   const [isEditing, setIsEditing] = useState<boolean>(true);
 
   const navigate = useNavigate();

@@ -14,7 +14,6 @@ declare const window: ElectronWindow;
 
 export const loadRequestList = async (): Promise<Array<Request> | null> => {
   const requestList = await window.db.loadRequestList();
-  console.log("inLoad");
   return requestList;
 };
 
@@ -31,7 +30,6 @@ export const resetRequestList = async (): Promise<void> => {
 export const exportToExcel = async (
   requestList: Array<Request>,
 ): Promise<void> => {
-  console.log("inExcel");
   await window.db.exportToExcel(requestList);
 };
 

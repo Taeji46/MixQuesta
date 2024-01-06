@@ -16,5 +16,7 @@ export interface Request {
 export interface Client {
   id: string;
   name: string;
-  contactInfo: string;
+  xAccountId: string;
+  otherContactInfo: string;
+  notes: string;
 }

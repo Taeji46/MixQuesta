@@ -1,3 +1,9 @@
+/* @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500&family=Zen+Maru+Gothic&display=swap');
+
+* {
+  font-family: 'Zen Maru Gothic', serif;
+} */
+
 .app_container {
   display: flex;
   min-height: 100vh;
@@ -14,7 +20,7 @@ body {
   margin: 0;
 }
 
-.request_list_container {
+.client_list_container {
   display: flex;
   flex-direction: column;
   justify-content: top;
@@ -24,7 +30,7 @@ body {
   border-right: 1px solid gray;
 }
 
-.status_requested {
+.status_cliented {
   color: red;
 }
 
@@ -36,12 +42,12 @@ body {
   color: green;
 }
 
-.request_list li {
+.client_list li {
   line-height: 2;
 }
 
-.request_list li input,
-.request_list li span {
+.client_list li input,
+.client_list li span {
   cursor: pointer;
 }
 
@@ -65,44 +71,44 @@ a:hover {
   text-decoration: none;
 }
 
-.request_list_table {
+.client_list_table {
   border-collapse: collapse;
   border-spacing: 0;
   width: 100%;
 }
 
-.request_list_table tr {
+.client_list_table tr {
   border-bottom: solid 1px #eee;
 }
 
-.request_list_table tr:hover {
+.client_list_table tr:hover {
   background-color: #d4f0fd;
 }
 
-.request_list_table tbody tr {
+.client_list_table tbody tr {
   cursor: pointer;
   transition: 0.2s ease-in-out;
 }
 
-.request_list_table tbody tr:hover {
+.client_list_table tbody tr:hover {
   transform: translateX(4px);
 }
 
-.request_list_table th,
-.request_list_table td {
+.client_list_table th,
+.client_list_table td {
   text-align: center;
   width: 20%;
   padding: 15px 0;
 }
 
-.request_list_table th {
+.client_list_table th {
   position: sticky;
   top: 0;
   background-color: rgb(80, 80, 255);
   color: white;
 }
 
-.create_request_button {
+.create_client_button {
   text-align: center;
   position: absolute;
   bottom: 0;
@@ -110,7 +116,7 @@ a:hover {
   background: transparent;
   border: none;
 }
-.create_request_button span {
+.create_client_button span {
   position: relative;
   display: flex;
   justify-content: space-around;
@@ -125,7 +131,7 @@ a:hover {
   filter: drop-shadow(0px 2px 4px #ccc);
   border-radius: 10px;
 }
-.create_request_button span:hover {
+.create_client_button span:hover {
   background: rgb(80, 80, 255, 0.75);
   transform: translateY(-2px);
   box-shadow:

@@ -18,7 +18,7 @@ import Store, { Schema } from 'electron-store';
 import * as xlsx from 'xlsx';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
-import { Request } from '../renderer/types/types';
+import { Request, Client } from '../renderer/types/types';
 
 class AppUpdater {
   constructor() {
@@ -155,6 +155,18 @@ ipcMain.handle('storeRequestList', async (event, data) => {
 
 ipcMain.handle('resetRequestList', async (event) => {
   storeData.set('requestList', null);
+});
+
+ipcMain.handle('loadClientList', async (event) => {
+  return storeData.get('clientList');
+});
+
+ipcMain.handle('storeClientList', async (event, data) => {
+  storeData.set('clientList', data);
+});
+
+ipcMain.handle('resetClientList', async (event) => {
+  storeData.set('clientList', null);
 });
 
 // ipcMain.handle('exportToExcel', async (event, requestData: Request[]) => {
