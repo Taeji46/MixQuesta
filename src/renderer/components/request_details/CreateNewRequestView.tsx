@@ -22,6 +22,7 @@ const CreateNewRequestView = () => {
   const [isEditing, setIsEditing] = useState<boolean>(true);
 
   const navigate = useNavigate();
+  const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.8);
 
   useEffect(() => {
     loadRequestList().then((loadedRequestList) => {
@@ -34,6 +35,16 @@ const CreateNewRequestView = () => {
     setDeadline('なし');
     setStatus('依頼受付');
     setPaymentReceived(false);
+
+    const handleResize = () => {
+      setMaxHeight(window.innerHeight * 0.8);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const handleEditClick = () => {
@@ -182,180 +193,189 @@ const CreateNewRequestView = () => {
     <div className={styles.app_container}>
       <MenuBar />
       <div className={styles.request_details_container}>
-        <table className={styles.request_details_table}>
-          <tbody>
-            <tr>
-              <th>顧客ID</th>
-              <td>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="clientId"
-                    value={clientId}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  clientId
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th>依頼日</th>
-              <td>
-                {isEditing ? (
-                  <input
-                    type="date"
-                    name="requestDate"
-                    value={requestDate}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  formatDate(new Date(requestDate))
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th>納品日</th>
-              <td>
-                {isEditing ? (
-                  <input
-                    type="date"
-                    name="deliveryDate"
-                    value={deliveryDate}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  formatDate(new Date(deliveryDate))
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th>希望納期</th>
-              <td>
-                {isEditing ? (
-                  <input
-                    type="date"
-                    name="deadline"
-                    value={deadline}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  formatDate(new Date(deadline))
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th>進行状況</th>
-              <td>
-                {isEditing ? (
-                  <select
-                    name="status"
-                    value={status}
-                    onChange={handleInputChange}
-                  >
-                    <option value="依頼受付">依頼受付</option>
-                    <option value="進行中">進行中</option>
-                    <option value="納品済">納品済</option>
-                  </select>
-                ) : (
-                  <span className={getStatusClassName()}>{status}</span>
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th>プラン</th>
-              <td>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="plan"
-                    value={plan}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  plan
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th>料金</th>
-              <td>
-                {isEditing ? (
-                  <input
-                    type="number"
-                    name="fee"
-                    value={fee}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  fee
-                )}{' '}
-                円
-              </td>
-            </tr>
-            <tr>
-              <th>支払い方法</th>
-              <td>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="paymentMethod"
-                    value={paymentMethod}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  paymentMethod
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th>受領</th>
-              <td>
-                {isEditing ? (
-                  <input
-                    type="checkbox"
-                    name="paymentReceived"
-                    checked={paymentReceived}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  <span className={paymentReceived ? 'yes' : 'no'}>
-                    {paymentReceived ? '受領済' : '未受領'}
-                  </span>
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th>曲名</th>
-              <td>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="songName"
-                    value={songName}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  songName
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th>備考</th>
-              <td>
-                {isEditing ? (
-                  <textarea
-                    name="notes"
-                    value={notes}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  notes
-                )}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div style={{ maxHeight: `${maxHeight}px`, overflowY: 'auto' }}>
+          <table className={styles.request_details_table}>
+            <tbody>
+              <tr>
+                <th>顧客ID</th>
+                <td>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="clientId"
+                      value={clientId}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    clientId
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th>依頼日</th>
+                <td>
+                  {isEditing ? (
+                    <input
+                      type="date"
+                      name="requestDate"
+                      value={requestDate}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    formatDate(new Date(requestDate))
+                  )}
+                </td>
+              </tr>
+              {status === '納品済' ? (
+                <tr>
+                  <th>納品日</th>
+                  <td>
+                    {isEditing ? (
+                      <input
+                        type="date"
+                        name="deliveryDate"
+                        value={deliveryDate}
+                        onChange={handleInputChange}
+                      />
+                    ) : (
+                      formatDate(new Date(deliveryDate))
+                    )}
+                  </td>
+                </tr>
+              ) : (
+                <tr>
+                  <th>納品日</th>
+                  <td>未納</td>
+                </tr>
+              )}
+              <tr>
+                <th>希望納期</th>
+                <td>
+                  {isEditing ? (
+                    <input
+                      type="date"
+                      name="deadline"
+                      value={deadline}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    formatDate(new Date(deadline))
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th>進行状況</th>
+                <td>
+                  {isEditing ? (
+                    <select
+                      name="status"
+                      value={status}
+                      onChange={handleInputChange}
+                    >
+                      <option value="依頼受付">依頼受付</option>
+                      <option value="進行中">進行中</option>
+                      <option value="納品済">納品済</option>
+                    </select>
+                  ) : (
+                    <span className={getStatusClassName()}>{status}</span>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th>プラン</th>
+                <td>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="plan"
+                      value={plan}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    plan
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th>料金</th>
+                <td>
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      name="fee"
+                      value={fee}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    fee
+                  )}{' '}
+                  円
+                </td>
+              </tr>
+              <tr>
+                <th>支払い方法</th>
+                <td>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="paymentMethod"
+                      value={paymentMethod}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    paymentMethod
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th>受領</th>
+                <td>
+                  {isEditing ? (
+                    <input
+                      type="checkbox"
+                      name="paymentReceived"
+                      checked={paymentReceived}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <span className={paymentReceived ? 'yes' : 'no'}>
+                      {paymentReceived ? '受領済' : '未受領'}
+                    </span>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th>曲名</th>
+                <td>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="songName"
+                      value={songName}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    songName
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th>備考</th>
+                <td>
+                  {isEditing ? (
+                    <textarea
+                      name="notes"
+                      value={notes}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    notes
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div className={styles.button_container}>
           {isEditing ? (
             <button className={styles.save_edit_button} onClick={onSubmit}>

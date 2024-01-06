@@ -38,6 +38,10 @@ const RequestListView = () => {
 
   const navigate = useNavigate();
 
+  const navigateToCreateNewRequestView = () => {
+    navigate('/create_new_request');
+  }
+
   const handleRowClick = (requestId: string) => {
     const url = `/request_details/${requestId}`;
     navigate(url); // ページ遷移
@@ -69,7 +73,7 @@ const RequestListView = () => {
     <div className={styles.app_container}>
       <MenuBar />
       <div className={styles.request_list_container}>
-        <div style={{ maxHeight: `${maxHeight}px`, overflowY: 'auto' }}>
+        <div style={{ maxHeight: `${maxHeight}px`, overflowY: 'auto', overflowX: 'hidden' }}>
           <table className={styles.request_list_table}>
             <thead>
               <tr>
@@ -111,9 +115,12 @@ const RequestListView = () => {
           </table>
         </div>
         {/* <Link to="/create_new_request" className="add-request-button"> */}
-        <Link to="/create_new_request" className={styles.button_solid007}>
+        {/* <Link to="/create_new_request" className={styles.button_solid007}>
           <span>新規作成</span>
-        </Link>
+        </Link> */}
+        <button className={styles.create_request_button} onClick={navigateToCreateNewRequestView}>
+          <span>新規作成</span>
+        </button>
       </div>
     </div>
   );

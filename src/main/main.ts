@@ -79,7 +79,7 @@ const createWindow = async () => {
     width: 1024,
     height: 728,
     minWidth: 800,
-    minHeight: 450,
+    minHeight: 575,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
@@ -262,7 +262,7 @@ ipcMain.handle('exportToExcel', async (event, requestData: Request[]) => {
         request.plan,
         request.fee,
         request.paymentMethod,
-        request.paymentReceived,
+        request.paymentReceived ? '受領済' : '未受領',
         request.songName,
         request.notes,
       ]),
@@ -342,7 +342,7 @@ ipcMain.handle('importFromExcel', async (event) => {
         plan: row[6],
         fee: row[7],
         paymentMethod: row[8],
-        paymentReceived: row[9],
+        paymentReceived: row[9] === '受領済' ? true : false,
         songName: row[10],
         notes: row[11],
       }));

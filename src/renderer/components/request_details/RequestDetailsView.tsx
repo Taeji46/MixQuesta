@@ -29,6 +29,7 @@ const RequestDetailsView = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.8);
 
   useEffect(() => {
     if (id) {
@@ -53,6 +54,16 @@ const RequestDetailsView = () => {
       });
 
       setHasDeadline(deadline === 'なし' ? false : true);
+
+      const handleResize = () => {
+        setMaxHeight(window.innerHeight * 0.8);
+      };
+  
+      window.addEventListener('resize', handleResize);
+  
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
     }
   }, [id]);
 
@@ -217,7 +228,8 @@ const RequestDetailsView = () => {
     <div className={styles.app_container}>
       <MenuBar />
       <div className={styles.request_details_container}>
-        <table className={styles.request_details_table}>
+      <div style={{ maxHeight: `${maxHeight}px`, overflowY: 'auto' }}>
+      <table className={styles.request_details_table}>
           <tbody>
             <tr>
               <th>顧客ID</th>
@@ -412,6 +424,8 @@ const RequestDetailsView = () => {
             </tr>
           </tbody>
         </table>
+        </div>
+        
         <div className={styles.button_container}>
           {isEditing ? (
             <button className={styles.delete_button} onClick={handleDelete}>

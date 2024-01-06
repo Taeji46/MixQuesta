@@ -14,11 +14,12 @@
   text-decoration: none;
   color: white;
   font-weight: bold;
-  transition: all ease-in 0.1s;
+  transition: 0.3s ease-in-out;
 }
 
 .menu_bar a:hover {
   color: rgb(160, 160, 255);
+  transform: translateX(2px);
 }
 
 .menu_bar_setting {
