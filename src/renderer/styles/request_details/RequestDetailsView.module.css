@@ -22,6 +22,7 @@ table input[type='text'] {
   opacity: 0.9;
   padding: 4px 12px;
   width: 100%;
+  background: white;
 }
 
 table input[type='date'] {
@@ -33,6 +34,7 @@ table input[type='date'] {
   opacity: 0.9;
   padding: 4px 12px;
   width: 100%;
+  background: white;
 }
 
 table input[type='number'] {
@@ -44,6 +46,7 @@ table input[type='number'] {
   opacity: 0.9;
   padding: 4px 12px;
   width: 100%;
+  background: white;
 }
 
 table select {
@@ -55,6 +58,7 @@ table select {
   opacity: 0.9;
   padding: 4px 12px;
   width: 100%;
+  background: white;
 }
 
 table textarea {
@@ -64,7 +68,8 @@ table textarea {
   opacity: 0.9;
   padding: 4px 12px;
   width: 80%;
-  height: 50px
+  height: 50px;
+  background: white;
 }
 
 .input-field {

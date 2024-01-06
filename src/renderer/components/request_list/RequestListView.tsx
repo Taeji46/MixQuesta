@@ -1,29 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Request } from '../../types/types';
-import {
-  loadRequestList,
-  storeRequestList,
-  resetRequestList,
-  exportToExcel,
-} from '../../utils/RequestUtils';
-import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
+import { Request, Client } from '../../types/types';
+import { loadRequestList } from '../../utils/RequestUtils';
+import { loadClientList } from '../../utils/ClientUtils';
 import MenuBar from '../MenuBar';
 import styles from '../../styles/request_list/RequestListView.module.css';
 
 const RequestListView = () => {
   const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.85);
   const [requestList, setRequestList] = useState<Array<Request>>([]);
+  const [clientList, setClientList] = useState<Array<Client>>([]);
 
   useEffect(() => {
     loadRequestList().then((requestList) => {
       if (requestList) {
         setRequestList(requestList);
-        // exportToExcel(requestList);
       }
     });
 
-    // resetRequestList();
+    loadClientList().then((clientList) => {
+      if (clientList) {
+        setClientList(clientList);
+      }
+    });
 
     const handleResize = () => {
       setMaxHeight(window.innerHeight * 0.85);
@@ -40,11 +39,16 @@ const RequestListView = () => {
 
   const navigateToCreateNewRequestView = () => {
     navigate('/create_new_request');
-  }
+  };
 
   const handleRowClick = (requestId: string) => {
     const url = `/request_details/${requestId}`;
-    navigate(url); // ページ遷移
+    navigate(url);
+  };
+
+  const getClientNameById = (clientId: string) => {
+    const client = clientList.find((client) => client.id === clientId);
+    return client ? `${client.name} 様` : '未選択';
   };
 
   const formatDate = (date: Date) => {
@@ -73,7 +77,13 @@ const RequestListView = () => {
     <div className={styles.app_container}>
       <MenuBar />
       <div className={styles.request_list_container}>
-        <div style={{ maxHeight: `${maxHeight}px`, overflowY: 'auto', overflowX: 'hidden' }}>
+        <div
+          style={{
+            maxHeight: `${maxHeight}px`,
+            overflowY: 'auto',
+            overflowX: 'hidden',
+          }}
+        >
           <table className={styles.request_list_table}>
             <thead>
               <tr>
@@ -96,7 +106,7 @@ const RequestListView = () => {
                     key={request.id}
                     onClick={() => handleRowClick(request.id)}
                   >
-                    <td>{request.clientId} 様</td>
+                    <td>{getClientNameById(request.clientId)}</td>
                     <td>{formatDate(new Date(request.requestDate))}</td>
                     <td>
                       {request.deadline === 'なし'
@@ -105,7 +115,9 @@ const RequestListView = () => {
                     </td>
                     <td>{request.plan}</td>
                     <td>
-                      <span className={styles[getStatusClassName(request.status)]}>
+                      <span
+                        className={styles[getStatusClassName(request.status)]}
+                      >
                         {request.status}
                       </span>
                     </td>
@@ -114,11 +126,10 @@ const RequestListView = () => {
             </tbody>
           </table>
         </div>
-        {/* <Link to="/create_new_request" className="add-request-button"> */}
-        {/* <Link to="/create_new_request" className={styles.button_solid007}>
-          <span>新規作成</span>
-        </Link> */}
-        <button className={styles.create_request_button} onClick={navigateToCreateNewRequestView}>
+        <button
+          className={styles.create_request_button}
+          onClick={navigateToCreateNewRequestView}
+        >
           <span>新規作成</span>
         </button>
       </div>
