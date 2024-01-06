@@ -1,7 +1,7 @@
-export interface Request {
+export interface Order {
   id: string;
   clientId: string;
-  requestDate: string;
+  orderDate: string;
   deliveryDate: string;
   deadline: string;
   status: string;

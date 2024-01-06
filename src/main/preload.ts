@@ -29,15 +29,15 @@ contextBridge.exposeInMainWorld('electron', electronHandler);
 export type ElectronHandler = typeof electronHandler;
 
 contextBridge.exposeInMainWorld('db', {
-  loadRequestList: () => ipcRenderer.invoke('loadRequestList'),
-  storeRequestList: (requestList: Array<object>) =>
-    ipcRenderer.invoke('storeRequestList', requestList),
-  resetRequestList: () => ipcRenderer.invoke('resetRequestList'),
+  loadOrderList: () => ipcRenderer.invoke('loadOrderList'),
+  storeOrderList: (orderList: Array<object>) =>
+    ipcRenderer.invoke('storeOrderList', orderList),
+  resetOrderList: () => ipcRenderer.invoke('resetOrderList'),
   loadClientList: () => ipcRenderer.invoke('loadClientList'),
   storeClientList: (clientList: Array<object>) =>
     ipcRenderer.invoke('storeClientList', clientList),
   resetClientList: () => ipcRenderer.invoke('resetClientList'),
-  exportToExcel: (requestList: Array<object>, clientList: Array<object>) =>
-    ipcRenderer.invoke('exportToExcel', requestList, clientList),
+  exportToExcel: (orderList: Array<object>, clientList: Array<object>) =>
+    ipcRenderer.invoke('exportToExcel', orderList, clientList),
   importFromExcel: () => ipcRenderer.invoke('importFromExcel'),
 });

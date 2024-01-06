@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { Request } from '../../types/types';
-import { loadRequestList, storeRequestList } from '../../utils/RequestUtils';
+import { Order } from '../../types/types';
+import { loadOrderList, storeOrderList } from '../../utils/OrderUtils';
 import MenuBar from '../MenuBar';
-import styles from '../../styles/request_details/RequestDetailsView.module.css';
+import styles from '../../styles/order_details/OrderDetailsView.module.css';
 
-const CreateNewRequestView = () => {
-  const [requestList, setRequestList] = useState<Array<Request>>([]);
+const CreateNewOrderView = () => {
+  const [orderList, setOrderList] = useState<Array<Order>>([]);
   const [clientId, setClientId] = useState<string>('');
-  const [requestDate, setRequestDate] = useState<string>('');
+  const [orderDate, setOrderDate] = useState<string>('');
   const [deliveryDate, setDeliveryDate] = useState<string>('');
   const [deadline, setDeadline] = useState<string>('');
   const [status, setStatus] = useState<string>('');
@@ -26,9 +26,9 @@ const CreateNewRequestView = () => {
   const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.8);
 
   useEffect(() => {
-    loadRequestList().then((loadedRequestList) => {
-      if (loadedRequestList) {
-        setRequestList(loadedRequestList);
+    loadOrderList().then((loadedOrderList) => {
+      if (loadedOrderList) {
+        setOrderList(loadedOrderList);
       }
     });
 
@@ -86,8 +86,8 @@ const CreateNewRequestView = () => {
       case 'clientId':
         setClientId(value);
         break;
-      case 'requestDate':
-        setRequestDate(value);
+      case 'orderDate':
+        setOrderDate(value);
         break;
       case 'deliveryDate':
         setDeliveryDate(value);
@@ -154,7 +154,7 @@ const CreateNewRequestView = () => {
   const getStatusClassName = () => {
     switch (status) {
       case '依頼受付':
-        return 'status_requested';
+        return 'status_ordered';
       case '進行中':
         return 'status_in-progress';
       case '納品済':
@@ -166,11 +166,11 @@ const CreateNewRequestView = () => {
 
   const onSubmit = () => {
     if (clientId !== '') {
-      const newRequestList: Array<Request> = [
+      const newOrderList: Array<Order> = [
         {
           id: uuidv4(),
           clientId: clientId,
-          requestDate: requestDate,
+          orderDate: orderDate,
           deliveryDate: deliveryDate,
           deadline: deadline,
           status: status,
@@ -181,21 +181,21 @@ const CreateNewRequestView = () => {
           songName: songName,
           notes: notes,
         },
-        ...requestList,
+        ...orderList,
       ];
-      setRequestList(newRequestList);
-      storeRequestList(newRequestList);
+      setOrderList(newOrderList);
+      storeOrderList(newOrderList);
 
-      navigate('/request_list');
+      navigate('/order_list');
     }
   };
 
   return (
     <div className={styles.app_container}>
       <MenuBar />
-      <div className={styles.request_details_container}>
+      <div className={styles.order_details_container}>
         <div style={{ maxHeight: `${maxHeight}px`, overflowY: 'auto' }}>
-          <table className={styles.request_details_table}>
+          <table className={styles.order_details_table}>
             <tbody>
               <tr>
                 <th>顧客ID</th>
@@ -218,12 +218,12 @@ const CreateNewRequestView = () => {
                   {isEditing ? (
                     <input
                       type="date"
-                      name="requestDate"
-                      value={requestDate}
+                      name="orderDate"
+                      value={orderDate}
                       onChange={handleInputChange}
                     />
                   ) : (
-                    formatDate(new Date(requestDate))
+                    formatDate(new Date(orderDate))
                   )}
                 </td>
               </tr>
@@ -399,4 +399,4 @@ const CreateNewRequestView = () => {
   );
 };
 
-export default CreateNewRequestView;
+export default CreateNewOrderView;

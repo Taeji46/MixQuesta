@@ -18,7 +18,7 @@ import Store, { Schema } from 'electron-store';
 import * as xlsx from 'xlsx';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
-import { Request, Client } from '../renderer/types/types';
+import { Order, Client } from '../renderer/types/types';
 
 class AppUpdater {
   constructor() {
@@ -145,16 +145,16 @@ app
 
 const storeData = new Store();
 
-ipcMain.handle('loadRequestList', async (event) => {
-  return storeData.get('requestList');
+ipcMain.handle('loadOrderList', async (event) => {
+  return storeData.get('orderList');
 });
 
-ipcMain.handle('storeRequestList', async (event, data) => {
-  storeData.set('requestList', data);
+ipcMain.handle('storeOrderList', async (event, data) => {
+  storeData.set('orderList', data);
 });
 
-ipcMain.handle('resetRequestList', async (event) => {
-  storeData.set('requestList', null);
+ipcMain.handle('resetOrderList', async (event) => {
+  storeData.set('orderList', null);
 });
 
 ipcMain.handle('loadClientList', async (event) => {
@@ -193,7 +193,7 @@ const showErrorAlert = (message: string) => {
 
 ipcMain.handle(
   'exportToExcel',
-  async (event, requestData: Request[], clientData: Client[]) => {
+  async (event, orderData: Order[], clientData: Client[]) => {
     try {
       const now = new Date();
       const year = now.getFullYear();
@@ -233,32 +233,32 @@ ipcMain.handle(
 
       const sheetData1 = [
         headerRow1,
-        ...requestData
+        ...orderData
           ?.sort(
             (a, b) =>
-              new Date(a.requestDate).getTime() -
-              new Date(b.requestDate).getTime(),
+              new Date(a.orderDate).getTime() -
+              new Date(b.orderDate).getTime(),
           )
-          .map((request: Request) => [
-            request.id,
-            request.clientId,
-            request.requestDate,
-            request.deliveryDate,
-            request.deadline,
-            request.status,
-            request.plan,
-            request.fee,
-            request.paymentMethod,
-            request.paymentReceived ? '受領済' : '未受領',
-            request.songName,
-            request.notes,
+          .map((order: Order) => [
+            order.id,
+            order.clientId,
+            order.orderDate,
+            order.deliveryDate,
+            order.deadline,
+            order.status,
+            order.plan,
+            order.fee,
+            order.paymentMethod,
+            order.paymentReceived ? '受領済' : '未受領',
+            order.songName,
+            order.notes,
           ]),
       ];
 
       xlsx.utils.book_append_sheet(
         workbook,
         xlsx.utils.aoa_to_sheet(sheetData1),
-        'Request List',
+        'Order List',
       );
 
       const headerRow2 = [
@@ -341,19 +341,19 @@ ipcMain.handle('importFromExcel', async (event) => {
     const workbook = xlsx.readFile(filePaths[0]);
 
     const jsonData1 = xlsx.utils.sheet_to_json(
-      workbook.Sheets['Request List'],
+      workbook.Sheets['Order List'],
       {
         header: 1,
         defval: null,
       },
     );
 
-    const data1: Array<Request> = jsonData1
+    const data1: Array<Order> = jsonData1
       .slice(1) // 1行目を無視
       .map((row: any) => ({
         id: row[0],
         clientId: row[1],
-        requestDate: serialToDateString(row[2]),
+        orderDate: serialToDateString(row[2]),
         deliveryDate: serialToDateString(row[3]),
         deadline: serialToDateString(row[4]),
         status: row[5],

@@ -1,19 +1,19 @@
-import { Request, Client } from '../types/types';
+import { Order, Client } from '../types/types';
 
 interface ElectronWindow extends Window {
   db: {
-    exportToExcel: (requestList: Array<Request>, clientList: Array<Client>) => Promise<void>;
-    importFromExcel: () => Promise<Array<Request> | null>;
+    exportToExcel: (orderList: Array<Order>, clientList: Array<Client>) => Promise<void>;
+    importFromExcel: () => Promise<Array<Order> | null>;
   };
 }
 
 declare const window: ElectronWindow;
 
 export const exportToExcel = async (
-  requestList: Array<Request>,
+  orderList: Array<Order>,
   clientList: Array<Client>,
 ): Promise<void> => {
-  await window.db.exportToExcel(requestList, clientList);
+  await window.db.exportToExcel(orderList, clientList);
 };
 
 export const importFromExcel = async (): Promise<Array<any> | null> => {

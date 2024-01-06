@@ -1,10 +1,10 @@
 import MenuBar from './MenuBar';
-import { Request, Client } from '../types/types';
+import { Order, Client } from '../types/types';
 import {
-  loadRequestList,
-  storeRequestList,
-  resetRequestList,
-} from '../utils/RequestUtils';
+  loadOrderList,
+  storeOrderList,
+  resetOrderList,
+} from '../utils/OrderUtils';
 import {
   loadClientList,
   storeClientList,
@@ -20,21 +20,21 @@ const SettingsView = () => {
   const reflectsExcelData = () => {
     importFromExcel().then((importData) => {
       if (importData) {
-        const requestList: Array<Request> = importData[0];
+        const orderList: Array<Order> = importData[0];
         const clientList: Array<Client> = importData[1];
 
-        storeRequestList(requestList);
+        storeOrderList(orderList);
         storeClientList(clientList);
       }
     });
   };
   
   const ExecuteExportToExcel = () => {
-    loadRequestList().then((requestList) => {
-      if (requestList) {
+    loadOrderList().then((orderList) => {
+      if (orderList) {
         loadClientList().then((clientList) => {
           if (clientList) {
-            exportToExcel(requestList, clientList);
+            exportToExcel(orderList, clientList);
           }
         });
       }

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Request, Client } from '../../types/types';
+import { Order, Client } from '../../types/types';
 import {
-  loadRequestList,
-  storeRequestList,
-  fetchRequestById,
-} from '../../utils/RequestUtils';
+  loadOrderList,
+  storeOrderList,
+  fetchOrderById,
+} from '../../utils/OrderUtils';
 import {
   loadClientList,
   storeClientList,
   fetchClientById,
 } from '../../utils/ClientUtils';
 import MenuBar from '../MenuBar';
-import styles from '../../styles/request_details/RequestDetailsView.module.css';
+import styles from '../../styles/order_details/OrderDetailsView.module.css';
 
-const RequestDetailsView = () => {
-  const [requestList, setRequestList] = useState<Array<Request>>([]);
+const OrderDetailsView = () => {
+  const [orderList, setOrderList] = useState<Array<Order>>([]);
   const [clientList, setClientList] = useState<Array<Client>>([]);
 
   const { id } = useParams<{ id: string }>();
@@ -25,7 +25,7 @@ const RequestDetailsView = () => {
   );
 
   const [clientId, setClientId] = useState<string>('');
-  const [requestDate, setRequestDate] = useState<string>('');
+  const [orderDate, setOrderDate] = useState<string>('');
   const [deliveryDate, setDeliveryDate] = useState<string>('');
   const [deadline, setDeadline] = useState<string>('');
   const [status, setStatus] = useState<string>('');
@@ -52,9 +52,9 @@ const RequestDetailsView = () => {
 
   useEffect(() => {
     if (id) {
-      loadRequestList().then((loadedRequestList) => {
-        if (loadedRequestList) {
-          setRequestList(loadedRequestList);
+      loadOrderList().then((loadedOrderList) => {
+        if (loadedOrderList) {
+          setOrderList(loadedOrderList);
         }
       });
 
@@ -62,10 +62,10 @@ const RequestDetailsView = () => {
         if (loadedClientList) {
           setClientList(loadedClientList);
 
-          fetchRequestById(id).then((request) => {
-            if (request && request.clientId) {
+          fetchOrderById(id).then((order) => {
+            if (order && order.clientId) {
               const selectedClient = loadedClientList.find(
-                (client) => client.id === request.clientId,
+                (client) => client.id === order.clientId,
               );
               setSelectedClient(selectedClient);
             }
@@ -73,18 +73,18 @@ const RequestDetailsView = () => {
         }
       });
 
-      fetchRequestById(id).then((request) => {
-        setClientId(request.clientId);
-        setRequestDate(request.requestDate);
-        setDeliveryDate(request.deliveryDate);
-        setDeadline(request.deadline);
-        setStatus(request.status);
-        setPlan(request.plan);
-        setFee(request.fee);
-        setPaymentMethod(request.paymentMethod);
-        setPaymentReceived(request.paymentReceived);
-        setSongName(request.songName);
-        setNotes(request.notes);
+      fetchOrderById(id).then((order) => {
+        setClientId(order.clientId);
+        setOrderDate(order.orderDate);
+        setDeliveryDate(order.deliveryDate);
+        setDeadline(order.deadline);
+        setStatus(order.status);
+        setPlan(order.plan);
+        setFee(order.fee);
+        setPaymentMethod(order.paymentMethod);
+        setPaymentReceived(order.paymentReceived);
+        setSongName(order.songName);
+        setNotes(order.notes);
       });
 
       setHasDeadline(deadline === 'なし' ? false : true);
@@ -136,8 +136,8 @@ const RequestDetailsView = () => {
 
   const handleTextChange = (field: string, value: string) => {
     switch (field) {
-      case 'requestDate':
-        setRequestDate(value);
+      case 'orderDate':
+        setOrderDate(value);
         break;
       case 'deliveryDate':
         setDeliveryDate(value);
@@ -221,7 +221,7 @@ const RequestDetailsView = () => {
   const getStatusClassName = () => {
     switch (status) {
       case '依頼受付':
-        return 'status_requested';
+        return 'status_ordered';
       case '進行中':
         return 'status_in-progress';
       case '納品済':
@@ -233,10 +233,10 @@ const RequestDetailsView = () => {
 
   const onSave = () => {
     if (id && clientId !== '') {
-      const updatedRequest: Request = {
+      const updatedOrder: Order = {
         id: id,
         clientId: clientId,
-        requestDate: requestDate,
+        orderDate: orderDate,
         deliveryDate: deliveryDate,
         deadline: deadline,
         status: status,
@@ -248,8 +248,8 @@ const RequestDetailsView = () => {
         notes: notes,
       };
 
-      const updatedRequestList = requestList.map((request) =>
-        request.id === id ? updatedRequest : request,
+      const updatedOrderList = orderList.map((order) =>
+        order.id === id ? updatedOrder : order,
       );
 
       loadClientList().then((loadedClientList) => { // 2回目編集時にselectの要素をリセット
@@ -259,8 +259,8 @@ const RequestDetailsView = () => {
         }
       });
 
-      setRequestList(updatedRequestList);
-      storeRequestList(updatedRequestList);
+      setOrderList(updatedOrderList);
+      storeOrderList(updatedOrderList);
       setIsEditing(false);
     }
   };
@@ -269,17 +269,17 @@ const RequestDetailsView = () => {
     const confirmDeletion = window.confirm('本当に削除しますか？');
 
     if (confirmDeletion) {
-      storeRequestList(requestList.filter((request) => request.id !== id));
-      navigate('/request_list');
+      storeOrderList(orderList.filter((order) => order.id !== id));
+      navigate('/order_list');
     }
   };
 
   return (
     <div className={styles.app_container}>
       <MenuBar />
-      <div className={styles.request_details_container}>
+      <div className={styles.order_details_container}>
         <div style={{ maxHeight: `${maxHeight}px`, overflowY: 'auto' }}>
-          <table className={styles.request_details_table}>
+          <table className={styles.order_details_table}>
             <tbody>
               <tr>
                 <th>顧客</th>
@@ -321,12 +321,12 @@ const RequestDetailsView = () => {
                   {isEditing ? (
                     <input
                       type="date"
-                      name="requestDate"
-                      value={requestDate}
+                      name="orderDate"
+                      value={orderDate}
                       onChange={handleInputChange}
                     />
                   ) : (
-                    formatDate(new Date(requestDate))
+                    formatDate(new Date(orderDate))
                   )}
                 </td>
               </tr>
@@ -508,4 +508,4 @@ const RequestDetailsView = () => {
   );
 };
 
-export default RequestDetailsView;
+export default OrderDetailsView;

@@ -78,7 +78,7 @@ table textarea {
   opacity: 0.95;
 }
 
-.request_details_container {
+.order_details_container {
   display: flex;
   flex-direction: column;
   justify-content: top;
@@ -88,12 +88,12 @@ table textarea {
   border-right: 1px solid gray;
 }
 
-.request_list li {
+.order_list li {
   line-height: 2;
 }
 
-.request_list li input,
-.request_list li span {
+.order_list li input,
+.order_list li span {
   cursor: pointer;
 }
 
@@ -125,7 +125,7 @@ span.no {
   color: red;
 }
 
-.status_requested {
+.status_ordered {
   color: red;
 }
 
@@ -137,20 +137,20 @@ span.no {
   color: green;
 }
 
-.request_details_table {
+.order_details_table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.request_details_table tr {
+.order_details_table tr {
   border-bottom: solid 2px white;
 }
 
-.request_details_table tr:last-child {
+.order_details_table tr:last-child {
   border-bottom: none;
 }
 
-.request_details_table th {
+.order_details_table th {
   position: relative;
   text-align: left;
   width: 30%;
@@ -160,7 +160,7 @@ span.no {
   padding: 10px 0;
 }
 
-.request_details_table td {
+.order_details_table td {
   text-align: left;
   width: 70%;
   text-align: center;

@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Request, Client } from '../../types/types';
-import { loadRequestList } from '../../utils/RequestUtils';
+import { Order, Client } from '../../types/types';
+import { loadOrderList } from '../../utils/OrderUtils';
 import { loadClientList } from '../../utils/ClientUtils';
 import MenuBar from '../MenuBar';
-import styles from '../../styles/request_list/RequestListView.module.css';
+import styles from '../../styles/order_list/OrderListView.module.css';
 
-const RequestListView = () => {
+const OrderListView = () => {
   const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.85);
-  const [requestList, setRequestList] = useState<Array<Request>>([]);
+  const [orderList, setOrderList] = useState<Array<Order>>([]);
   const [clientList, setClientList] = useState<Array<Client>>([]);
 
   useEffect(() => {
-    loadRequestList().then((requestList) => {
-      if (requestList) {
-        setRequestList(requestList);
+    loadOrderList().then((orderList) => {
+      if (orderList) {
+        setOrderList(orderList);
       }
     });
 
@@ -37,12 +37,12 @@ const RequestListView = () => {
 
   const navigate = useNavigate();
 
-  const navigateToCreateNewRequestView = () => {
-    navigate('/create_new_request');
+  const navigateToCreateNewOrderView = () => {
+    navigate('/create_new_order');
   };
 
-  const handleRowClick = (requestId: string) => {
-    const url = `/request_details/${requestId}`;
+  const handleRowClick = (orderId: string) => {
+    const url = `/order_details/${orderId}`;
     navigate(url);
   };
 
@@ -63,7 +63,7 @@ const RequestListView = () => {
   const getStatusClassName = (status: String) => {
     switch (status) {
       case '依頼受付':
-        return 'status_requested';
+        return 'status_ordered';
       case '進行中':
         return 'status_in-progress';
       case '納品済':
@@ -76,7 +76,7 @@ const RequestListView = () => {
   return (
     <div className={styles.app_container}>
       <MenuBar />
-      <div className={styles.request_list_container}>
+      <div className={styles.order_list_container}>
         <div
           style={{
             maxHeight: `${maxHeight}px`,
@@ -84,7 +84,7 @@ const RequestListView = () => {
             overflowX: 'hidden',
           }}
         >
-          <table className={styles.request_list_table}>
+          <table className={styles.order_list_table}>
             <thead>
               <tr>
                 <th>顧客</th>
@@ -95,30 +95,30 @@ const RequestListView = () => {
               </tr>
             </thead>
             <tbody>
-              {requestList
+              {orderList
                 ?.sort(
                   (a, b) =>
-                    new Date(b.requestDate).getTime() -
-                    new Date(a.requestDate).getTime(),
+                    new Date(b.orderDate).getTime() -
+                    new Date(a.orderDate).getTime(),
                 )
-                .map((request) => (
+                .map((order) => (
                   <tr
-                    key={request.id}
-                    onClick={() => handleRowClick(request.id)}
+                    key={order.id}
+                    onClick={() => handleRowClick(order.id)}
                   >
-                    <td>{getClientNameById(request.clientId)}</td>
-                    <td>{formatDate(new Date(request.requestDate))}</td>
+                    <td>{getClientNameById(order.clientId)}</td>
+                    <td>{formatDate(new Date(order.orderDate))}</td>
                     <td>
-                      {request.deadline === 'なし'
+                      {order.deadline === 'なし'
                         ? 'なし'
-                        : formatDate(new Date(request.deadline))}
+                        : formatDate(new Date(order.deadline))}
                     </td>
-                    <td>{request.plan}</td>
+                    <td>{order.plan}</td>
                     <td>
                       <span
-                        className={styles[getStatusClassName(request.status)]}
+                        className={styles[getStatusClassName(order.status)]}
                       >
-                        {request.status}
+                        {order.status}
                       </span>
                     </td>
                   </tr>
@@ -127,8 +127,8 @@ const RequestListView = () => {
           </table>
         </div>
         <button
-          className={styles.create_request_button}
-          onClick={navigateToCreateNewRequestView}
+          className={styles.create_order_button}
+          onClick={navigateToCreateNewOrderView}
         >
           <span>新規作成</span>
         </button>
@@ -137,4 +137,4 @@ const RequestListView = () => {
   );
 };
 
-export default RequestListView;
+export default OrderListView;
