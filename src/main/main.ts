@@ -169,35 +169,6 @@ ipcMain.handle('resetClientList', async (event) => {
   storeData.set('clientList', null);
 });
 
-// ipcMain.handle('exportToExcel', async (event, requestData: Request[]) => {
-//   const workbook = xlsx.utils.book_new();
-
-//   const headerRow = ['UUID', '顧客ID', '依頼日', '納品日', '希望納期', '進行状況', 'プラン', '料金', '支払い方法', '受領', '曲名', '備考'];
-
-//   const sheetData = [headerRow, ...requestData.map((request: Request) => [
-//     request.id,
-//     request.clientId,
-//     request.requestDate,
-//     request.deliveryDate,
-//     request.deadline,
-//     request.status,
-//     request.plan,
-//     request.fee,
-//     request.paymentMethod,
-//     request.paymentReceived,
-//     request.songName,
-//     request.notes,
-//   ])];
-
-//   xlsx.utils.book_append_sheet(
-//     workbook,
-//     xlsx.utils.aoa_to_sheet(sheetData),
-//     'Request List',
-//   );
-
-//   xlsx.writeFile(workbook, 'output.xlsx');
-// });
-
 const showSuccessAlert = (message: string) => {
   const successDialogOptions = {
     type: 'info' as const,
@@ -220,83 +191,113 @@ const showErrorAlert = (message: string) => {
   dialog.showMessageBox(errorDialogOptions);
 };
 
-ipcMain.handle('exportToExcel', async (event, requestData: Request[]) => {
-  try {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = ('0' + (now.getMonth() + 1)).slice(-2);
-    const day = ('0' + now.getDate()).slice(-2);
-    const hour = ('0' + now.getHours()).slice(-2);
-    const minute = ('0' + now.getMinutes()).slice(-2);
-    const second = ('0' + now.getSeconds()).slice(-2);
+ipcMain.handle(
+  'exportToExcel',
+  async (event, requestData: Request[], clientData: Client[]) => {
+    try {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = ('0' + (now.getMonth() + 1)).slice(-2);
+      const day = ('0' + now.getDate()).slice(-2);
+      const hour = ('0' + now.getHours()).slice(-2);
+      const minute = ('0' + now.getMinutes()).slice(-2);
+      const second = ('0' + now.getSeconds()).slice(-2);
 
-    const formattedDate = `${year}${month}${day}_${hour}${minute}${second}`;
+      const formattedDate = `${year}${month}${day}_${hour}${minute}${second}`;
 
-    const { filePath } = await dialog.showSaveDialog({
-      defaultPath: `MixQuesta_${formattedDate}.xlsx`,
-      filters: [{ name: 'Excel Files', extensions: ['xlsx'] }],
-    });
+      const { filePath } = await dialog.showSaveDialog({
+        defaultPath: `MixQuesta_${formattedDate}.xlsx`,
+        filters: [{ name: 'Excel Files', extensions: ['xlsx'] }],
+      });
 
-    if (!filePath) {
-      return;
+      if (!filePath) {
+        return;
+      }
+
+      const workbook = xlsx.utils.book_new();
+
+      const headerRow1 = [
+        'UUID',
+        '顧客ID',
+        '依頼日',
+        '納品日',
+        '希望納期',
+        '進行状況',
+        'プラン',
+        '料金',
+        '支払い方法',
+        '受領',
+        '曲名',
+        '備考',
+      ];
+
+      const sheetData1 = [
+        headerRow1,
+        ...requestData
+          ?.sort(
+            (a, b) =>
+              new Date(a.requestDate).getTime() -
+              new Date(b.requestDate).getTime(),
+          )
+          .map((request: Request) => [
+            request.id,
+            request.clientId,
+            request.requestDate,
+            request.deliveryDate,
+            request.deadline,
+            request.status,
+            request.plan,
+            request.fee,
+            request.paymentMethod,
+            request.paymentReceived ? '受領済' : '未受領',
+            request.songName,
+            request.notes,
+          ]),
+      ];
+
+      xlsx.utils.book_append_sheet(
+        workbook,
+        xlsx.utils.aoa_to_sheet(sheetData1),
+        'Request List',
+      );
+
+      const headerRow2 = [
+        'UUID',
+        '顧客名',
+        'Xアカウント',
+        'その他連絡先',
+        '備考',
+      ];
+
+      const sheetData2 = [
+        headerRow2,
+        ...clientData.map((client: Client) => [
+          client.id,
+          client.name,
+          client.xAccountId,
+          client.otherContactInfo,
+          client.notes,
+        ]),
+      ];
+
+      xlsx.utils.book_append_sheet(
+        workbook,
+        xlsx.utils.aoa_to_sheet(sheetData2),
+        'Client List',
+      );
+
+      xlsx.writeFile(workbook, filePath);
+
+      const successMessage = 'エクスポートに成功しました。';
+      showSuccessAlert(successMessage);
+    } catch (e) {
+      const errorMessage = 'エクスポートに失敗しました。';
+      showErrorAlert(errorMessage);
+      console.error(`エラー発生: ${e}`);
+      throw new Error('Error exporting to Excel');
     }
-
-    const workbook = xlsx.utils.book_new();
-
-    const headerRow = [
-      'UUID',
-      '顧客ID',
-      '依頼日',
-      '納品日',
-      '希望納期',
-      '進行状況',
-      'プラン',
-      '料金',
-      '支払い方法',
-      '受領',
-      '曲名',
-      '備考',
-    ];
-
-    const sheetData = [
-      headerRow,
-      ...requestData?.sort(
-        (a, b) =>
-          new Date(a.requestDate).getTime() -
-          new Date(b.requestDate).getTime(),
-      ).map((request: Request) => [
-        request.id,
-        request.clientId,
-        request.requestDate,
-        request.deliveryDate,
-        request.deadline,
-        request.status,
-        request.plan,
-        request.fee,
-        request.paymentMethod,
-        request.paymentReceived ? '受領済' : '未受領',
-        request.songName,
-        request.notes,
-      ]),
-    ];
-
-    xlsx.utils.book_append_sheet(
-      workbook,
-      xlsx.utils.aoa_to_sheet(sheetData),
-      'Request List',
-    );
-
-    xlsx.writeFile(workbook, filePath);
-
-    const successMessage = 'エクスポートに成功しました。';
-    showSuccessAlert(successMessage);
-  } catch (e) {
-    const errorMessage = 'エクスポートに失敗しました。';
-    showErrorAlert(errorMessage);
-    console.error(`エラー発生: ${e}`);
-    throw new Error('Error exporting to Excel');
-  }
-});
+  },
+);
 
 const serialToDateString = (serial: string | number): string => {
   if (typeof serial === 'string') {
@@ -322,7 +323,7 @@ const serialToDateString = (serial: string | number): string => {
   const baseDate = new Date(1899, 11, 31);
   const date = new Date(baseDate.getTime() + serial * 24 * 60 * 60 * 1000);
   return date.toISOString().split('T')[0];
-}
+};
 
 ipcMain.handle('importFromExcel', async (event) => {
   try {
@@ -335,14 +336,19 @@ ipcMain.handle('importFromExcel', async (event) => {
       return null;
     }
 
+    const allData = [];
+
     const workbook = xlsx.readFile(filePaths[0]);
 
-    const jsonData = xlsx.utils.sheet_to_json(workbook.Sheets['Request List'], {
-      header: 1,
-      defval: null,
-    });
+    const jsonData1 = xlsx.utils.sheet_to_json(
+      workbook.Sheets['Request List'],
+      {
+        header: 1,
+        defval: null,
+      },
+    );
 
-    const data: Request[] = jsonData
+    const data1: Array<Request> = jsonData1
       .slice(1) // 1行目を無視
       .map((row: any) => ({
         id: row[0],
@@ -359,10 +365,32 @@ ipcMain.handle('importFromExcel', async (event) => {
         notes: row[11],
       }));
 
-      const successMessage = 'インポートに成功しました。';
-      showSuccessAlert(successMessage);
+    allData.push(data1);
 
-    return data;
+    const jsonData2 = xlsx.utils.sheet_to_json(
+      workbook.Sheets['Client List'],
+      {
+        header: 1,
+        defval: null,
+      },
+    );
+
+    const data2: Array<Client> = jsonData2
+      .slice(1) // 1行目を無視
+      .map((row: any) => ({
+        id: row[0],
+        name: row[1],
+        xAccountId: row[2],
+        otherContactInfo: row[3],
+        notes: row[4],
+      }));
+
+    allData.push(data2);
+
+    const successMessage = 'インポートに成功しました。';
+    showSuccessAlert(successMessage);
+
+    return allData;
   } catch (e) {
     const errorMessage = 'インポートに失敗しました。';
     showErrorAlert(errorMessage);

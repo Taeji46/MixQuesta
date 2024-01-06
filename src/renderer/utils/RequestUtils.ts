@@ -5,8 +5,6 @@ interface ElectronWindow extends Window {
     loadRequestList: () => Promise<Array<Request> | null>;
     storeRequestList: (requestList: Array<Request>) => Promise<void>;
     resetRequestList: () => Promise<void>;
-    exportToExcel: (requestList: Array<Request>) => Promise<void>;
-    importFromExcel: () => Promise<Array<Request> | null>;
   };
 }
 
@@ -25,17 +23,6 @@ export const storeRequestList = async (
 
 export const resetRequestList = async (): Promise<void> => {
   await window.db.resetRequestList();
-};
-
-export const exportToExcel = async (
-  requestList: Array<Request>,
-): Promise<void> => {
-  await window.db.exportToExcel(requestList);
-};
-
-export const importFromExcel = async (): Promise<Array<Request> | null> => {
-  const requestList = await window.db.importFromExcel();
-  return requestList;
 };
 
 export const defaultRequest = {

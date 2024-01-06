@@ -13,14 +13,14 @@
   border-right: 1px solid gray;
 }
 
-.import_from_excel_button {
+.excel_io_button {
   bottom: 0;
   display: inline-block;
   padding: 10px 10px 10px 10px;
   background: transparent;
   border: none;
 }
-.import_from_excel_button span {
+.excel_io_button span {
   position: relative;
   display: flex;
   justify-content: space-around;
@@ -35,7 +35,7 @@
   filter: drop-shadow(0px 2px 4px #ccc);
   border-radius: 10px;
 }
-.import_from_excel_button span:hover {
+.excel_io_button span:hover {
   transform: translateY(-2px);
   box-shadow:
     0 15px 30px -5px rgb(0 0 0 / 15%),

@@ -33,11 +33,11 @@ contextBridge.exposeInMainWorld('db', {
   storeRequestList: (requestList: Array<object>) =>
     ipcRenderer.invoke('storeRequestList', requestList),
   resetRequestList: () => ipcRenderer.invoke('resetRequestList'),
-  exportToExcel: (requestList: Array<object>) =>
-    ipcRenderer.invoke('exportToExcel', requestList),
-  importFromExcel: () => ipcRenderer.invoke('importFromExcel'),
   loadClientList: () => ipcRenderer.invoke('loadClientList'),
   storeClientList: (clientList: Array<object>) =>
     ipcRenderer.invoke('storeClientList', clientList),
   resetClientList: () => ipcRenderer.invoke('resetClientList'),
+  exportToExcel: (requestList: Array<object>, clientList: Array<object>) =>
+    ipcRenderer.invoke('exportToExcel', requestList, clientList),
+  importFromExcel: () => ipcRenderer.invoke('importFromExcel'),
 });
