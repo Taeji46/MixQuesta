@@ -144,14 +144,17 @@ const ClientDetailsView = () => {
                 <th>Xアカウント</th>
                 <td>
                   {isEditing ? (
-                    <input
-                      type="text"
-                      name="xAccountId"
-                      value={xAccountId}
-                      onChange={handleInputChange}
-                    />
+                    <div>
+                      <span>@ </span>
+                      <input
+                        type="text"
+                        name="xAccountId"
+                        value={xAccountId}
+                        onChange={handleInputChange}
+                      />
+                    </div>
                   ) : (
-                    xAccountId
+                    '@' + xAccountId
                   )}
                 </td>
               </tr>

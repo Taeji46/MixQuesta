@@ -6,11 +6,7 @@ import {
   storeOrderList,
   fetchOrderById,
 } from '../../utils/OrderUtils';
-import {
-  loadClientList,
-  storeClientList,
-  fetchClientById,
-} from '../../utils/ClientUtils';
+import { loadClientList } from '../../utils/ClientUtils';
 import MenuBar from '../MenuBar';
 import styles from '../../styles/order_details/OrderDetailsView.module.css';
 
@@ -252,7 +248,8 @@ const OrderDetailsView = () => {
         order.id === id ? updatedOrder : order,
       );
 
-      loadClientList().then((loadedClientList) => { // 2回目編集時にselectの要素をリセット
+      loadClientList().then((loadedClientList) => {
+        // 2回目編集時にselectの要素をリセット
         if (loadedClientList) {
           setClientList(loadedClientList);
           setFilteredClients(loadedClientList);
@@ -295,7 +292,7 @@ const OrderDetailsView = () => {
                       >
                         {filteredClients.length >= 0 ? (
                           <option value="">未選択</option>
-                        ) : (null)}
+                        ) : null}
                         {filteredClients.map((client) => (
                           <option key={client.id} value={client.id}>
                             {client.name}
@@ -353,20 +350,34 @@ const OrderDetailsView = () => {
                 </tr>
               )}
               <tr>
-                <th>希望納期</th>
-                <td>
-                  {isEditing ? (
+              <th>希望納期</th>
+              <td>
+                {isEditing ? (
+                  <div>
                     <input
-                      type="date"
-                      name="deadline"
-                      value={deadline}
+                      type="checkbox"
+                      name="hasDeadline"
+                      checked={hasDeadline}
                       onChange={handleInputChange}
                     />
-                  ) : (
-                    formatDate(new Date(deadline))
-                  )}
-                </td>
-              </tr>
+                    {hasDeadline ? (
+                      <input
+                        type="date"
+                        name="deadline"
+                        value={deadline}
+                        onChange={handleInputChange}
+                      />
+                    ) : (
+                      <span>納期設定</span>
+                    )}
+                  </div>
+                ) : deadline === 'なし' ? (
+                  'なし'
+                ) : (
+                  formatDate(new Date(deadline))
+                )}
+              </td>
+            </tr>
               <tr>
                 <th>進行状況</th>
                 <td>

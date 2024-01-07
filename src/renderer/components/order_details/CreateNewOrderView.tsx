@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { Order } from '../../types/types';
-import { loadOrderList, storeOrderList } from '../../utils/OrderUtils';
+import { Order, Client } from '../../types/types';
+import {
+  loadOrderList,
+  storeOrderList,
+  fetchOrderById,
+} from '../../utils/OrderUtils';
+import { loadClientList } from '../../utils/ClientUtils';
 import MenuBar from '../MenuBar';
 import styles from '../../styles/order_details/OrderDetailsView.module.css';
 
 const CreateNewOrderView = () => {
   const [orderList, setOrderList] = useState<Array<Order>>([]);
+  const [clientList, setClientList] = useState<Array<Client>>([]);
+
+  const [selectedClient, setSelectedClient] = useState<Client | undefined>(
+    undefined,
+  );
+
   const [clientId, setClientId] = useState<string>('');
   const [orderDate, setOrderDate] = useState<string>('');
   const [deliveryDate, setDeliveryDate] = useState<string>('');
@@ -19,16 +30,31 @@ const CreateNewOrderView = () => {
   const [paymentReceived, setPaymentReceived] = useState<boolean>(false);
   const [songName, setSongName] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
-  
+
   const [isEditing, setIsEditing] = useState<boolean>(true);
+
+  const [hasDeadline, setHasDeadline] = useState<boolean>(true);
+
+  const [filteredClients, setFilteredClients] =
+    useState<Array<Client>>(clientList);
 
   const navigate = useNavigate();
   const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.8);
 
   useEffect(() => {
+    setFilteredClients(clientList);
+  }, [clientList]);
+
+  useEffect(() => {
     loadOrderList().then((loadedOrderList) => {
       if (loadedOrderList) {
         setOrderList(loadedOrderList);
+      }
+    });
+
+    loadClientList().then((loadedClientList) => {
+      if (loadedClientList) {
+        setClientList(loadedClientList);
       }
     });
 
@@ -83,9 +109,6 @@ const CreateNewOrderView = () => {
 
   const handleTextChange = (field: string, value: string) => {
     switch (field) {
-      case 'clientId':
-        setClientId(value);
-        break;
       case 'orderDate':
         setOrderDate(value);
         break;
@@ -127,6 +150,10 @@ const CreateNewOrderView = () => {
       case 'paymentReceived':
         setPaymentReceived(!paymentReceived);
         break;
+      case 'hasDeadline':
+        setHasDeadline(!hasDeadline);
+        setDeadline(!hasDeadline ? '2024-01-01' : 'なし');
+        break;
       default:
         break;
     }
@@ -134,12 +161,25 @@ const CreateNewOrderView = () => {
 
   const handleSelectChange = (field: string, value: string) => {
     switch (field) {
+      case 'clientId':
+        const selectedClient = clientList.find((client) => client.id === value);
+        setSelectedClient(selectedClient);
+        setClientId(value);
+        break;
       case 'status':
         setStatus(value);
+        setDeliveryDate(value === '納品済' ? '2024-01-01' : '未納');
         break;
       default:
         break;
     }
+  };
+
+  const handleSearchChange = (searchTerm: string) => {
+    const filtered = clientList.filter((client) =>
+      client.name.includes(searchTerm),
+    );
+    setFilteredClients(filtered);
   };
 
   const formatDate = (date: Date) => {
@@ -198,17 +238,36 @@ const CreateNewOrderView = () => {
           <table className={styles.order_details_table}>
             <tbody>
               <tr>
-                <th>顧客ID</th>
+                <th>顧客</th>
                 <td>
                   {isEditing ? (
-                    <input
-                      type="text"
-                      name="clientId"
-                      value={clientId}
-                      onChange={handleInputChange}
-                    />
+                    <div>
+                      <select
+                        name="clientId"
+                        value={selectedClient?.id || ''}
+                        onChange={(e) =>
+                          handleSelectChange('clientId', e.target.value)
+                        }
+                      >
+                        {filteredClients.length >= 0 ? (
+                          <option value="">未選択</option>
+                        ) : null}
+                        {filteredClients.map((client) => (
+                          <option key={client.id} value={client.id}>
+                            {client.name}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="text"
+                        placeholder="名前で絞り込み"
+                        onChange={(e) => handleSearchChange(e.target.value)}
+                      />
+                    </div>
+                  ) : selectedClient ? (
+                    selectedClient.name + ' 様'
                   ) : (
-                    clientId
+                    '未選択'
                   )}
                 </td>
               </tr>
@@ -253,12 +312,26 @@ const CreateNewOrderView = () => {
                 <th>希望納期</th>
                 <td>
                   {isEditing ? (
-                    <input
-                      type="date"
-                      name="deadline"
-                      value={deadline}
-                      onChange={handleInputChange}
-                    />
+                    <div>
+                      <input
+                        type="checkbox"
+                        name="hasDeadline"
+                        checked={hasDeadline}
+                        onChange={handleInputChange}
+                      />
+                      {hasDeadline ? (
+                        <input
+                          type="date"
+                          name="deadline"
+                          value={deadline}
+                          onChange={handleInputChange}
+                        />
+                      ) : (
+                        <span>納期設定</span>
+                      )}
+                    </div>
+                  ) : deadline === 'なし' ? (
+                    'なし'
                   ) : (
                     formatDate(new Date(deadline))
                   )}
