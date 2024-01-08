@@ -22,4 +22,5 @@ Windows / MacOS
 
 ## 開発環境
 ・Electron  
-・React
+・React  
+・Node.js
