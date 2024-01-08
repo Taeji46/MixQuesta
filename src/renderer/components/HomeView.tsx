@@ -10,7 +10,7 @@ const HomeView = () => {
   const [orderList, setOrderList] = useState<Array<Order>>([]);
   const [clientList, setClientList] = useState<Array<Client>>([]);
 
-  const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.85);
+  const [maxHeight, setMaxHeight] = useState(window.innerHeight * 0.5);
   const currentDate = new Date();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const HomeView = () => {
     });
 
     const handleResize = () => {
-      setMaxHeight(window.innerHeight * 0.85);
+      setMaxHeight(window.innerHeight * 0.5);
     };
 
     window.addEventListener('resize', handleResize);
