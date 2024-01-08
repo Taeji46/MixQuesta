@@ -1,0 +1,24 @@
+# MixQuesta - 顧客・依頼管理アプリ
+インターネットで活動するMix師向けの顧客・依頼管理用アプリです。
+
+## 機能
+・未納品の依頼の表示  
+・顧客の一覧表示  
+・依頼の一覧表示   
+・Excelデータのインポート/エクスポート
+
+## スクリーンショット
+<img src="https://github.com/Taeji46/MixQuesta/assets/107469797/6fa2813a-ef65-4dfc-ad37-ed5ee4b1f544" width="600px">
+<img src="https://github.com/Taeji46/MixQuesta/assets/107469797/f2d30e35-e4e5-45ba-8d6d-04942468d253" width="600px">
+<img src="https://github.com/Taeji46/MixQuesta/assets/107469797/dcf576bf-45fe-47c8-9d5c-1ead8379821f" width="600px">
+<img src="https://github.com/Taeji46/MixQuesta/assets/107469797/b6a7151c-2ccb-44ac-b899-af0416666491" width="600px">
+
+## 利用方法
+準備中
+
+## 動作環境
+Windows / MacOS
+
+## 開発環境
+・Electron  
+・React
