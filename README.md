@@ -11,7 +11,7 @@
 <img src="https://github.com/Taeji46/MixQuesta/assets/107469797/6fa2813a-ef65-4dfc-ad37-ed5ee4b1f544" width="600px">
 <img src="https://github.com/Taeji46/MixQuesta/assets/107469797/f2d30e35-e4e5-45ba-8d6d-04942468d253" width="600px">
 <img src="https://github.com/Taeji46/MixQuesta/assets/107469797/dcf576bf-45fe-47c8-9d5c-1ead8379821f" width="600px">
-<img src="https://github.com/Taeji46/MixQuesta/assets/107469797/b6a7151c-2ccb-44ac-b899-af0416666491" width="600px">
+<img src="https://github.com/Taeji46/MixQuesta/assets/107469797/3c1278de-ac8f-4634-98fc-a38743e59720" width="600px">
 
 ## 利用方法
 準備中
