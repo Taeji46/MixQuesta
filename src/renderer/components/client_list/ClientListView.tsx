@@ -55,6 +55,14 @@ const ClientListView = () => {
     <div className={styles.app_container}>
       <MenuBar />
       <div className={styles.client_list_container}>
+        <div className={styles.input_container}>
+          <input
+            type="text"
+            placeholder="名前で絞り込み"
+            value={searchTerm}
+            onChange={(e) => handleSearchChange(e.target.value)}
+          />
+        </div>
         <div
           style={{
             maxHeight: `${maxHeight}px`,
@@ -62,14 +70,6 @@ const ClientListView = () => {
             overflowX: 'hidden',
           }}
         >
-          <div className={styles.input_container}>
-            <input
-              type="text"
-              placeholder="名前で絞り込み"
-              value={searchTerm}
-              onChange={(e) => handleSearchChange(e.target.value)}
-            />
-          </div>
           <table className={styles.client_list_table}>
             <thead>
               <tr>
