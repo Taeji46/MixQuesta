@@ -122,6 +122,7 @@ span.no {
   color: white;
   text-align: center;
   padding: 10px 0;
+  user-select: none;
 }
 
 .client_details_table td {
@@ -130,6 +131,7 @@ span.no {
   text-align: center;
   background-color: rgba(80, 80, 255, 0.05);
   padding: 10px 0;
+  user-select: auto;
 }
 
 .save_edit_button {
@@ -138,6 +140,7 @@ span.no {
   padding: 10px 10px 10px 10px;
   background: transparent;
   border: none;
+  user-select: none;
 }
 .save_edit_button span {
   position: relative;
@@ -168,6 +171,7 @@ span.no {
   padding: 10px 10px 10px 10px;
   background: transparent;
   border: none;
+  user-select: none;
 }
 .delete_button span {
   position: relative;
@@ -199,6 +203,7 @@ span.no {
   padding: 0px 0px 20px 0px;
   background: transparent;
   border: none;
+  user-select: none;
 }
 .back_button span {
   position: relative;
