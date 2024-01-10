@@ -4,7 +4,7 @@ import { Order, Client } from './../types/types';
 import { loadOrderList } from './../utils/OrderUtils';
 import { loadClientList } from './../utils/ClientUtils';
 import MenuBar from './MenuBar';
-import styles from './../styles/order_list/OrderListView.module.css';
+import styles from './../styles/HomeView.module.css';
 
 const HomeView = () => {
   const [orderList, setOrderList] = useState<Array<Order>>([]);
