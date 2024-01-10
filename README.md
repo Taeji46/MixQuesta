@@ -15,7 +15,7 @@
 <img src="https://github.com/Taeji46/MixQuesta/assets/107469797/3c1278de-ac8f-4634-98fc-a38743e59720" width="600px">
 
 ## 利用方法
-準備中
+[こちら](https://github.com/Taeji46/MixQuesta/releases/tag/v1.0)からダウンロード
 
 ## 動作環境
 Windows / MacOS
