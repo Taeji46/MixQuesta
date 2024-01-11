@@ -17,6 +17,7 @@
 ## 利用方法
 
 ### リポジトリをクローンして実行 (全ての機能が利用可能)
+[Node.js](https://nodejs.org/en/download)をインストール
 ```
 $ git clone https://github.com/Taeji46/MixQuesta.git
 $ cd MixQuesta
