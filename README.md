@@ -27,6 +27,10 @@ $ npm start
 ### リリースからダウンロード (Excel入出力ができない不具合: 修正中)  
 [こちら](https://github.com/Taeji46/MixQuesta/releases/tag/v1.0)からダウンロード
 
+### サンプルデータ (Excel)
+ダウンロードは[こちら](https://github.com/Taeji46/MixQuesta/releases/download/v1.0/sample_data.xlsx)
+
+
 ## 動作環境
 Windows / MacOS
 
