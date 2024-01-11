@@ -29,7 +29,7 @@ $ npm start
 ## 動作環境
 Windows / MacOS
 
-## 開発環境
+## 使用技術
 ・Electron  
 ・React  
 ・Node.js
