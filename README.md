@@ -38,3 +38,7 @@ Windows / MacOS
 ・Electron  
 ・React  
 ・Node.js
+
+## 使用ボイラープレート
+[electron-react-boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate)
+
