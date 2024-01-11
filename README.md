@@ -16,7 +16,7 @@
 
 ## 利用方法
 
-### ディレクトリをクローンして実行 (全ての機能が利用可能)
+### リポジトリをクローンして実行 (全ての機能が利用可能)
 ```
 $ git clone https://github.com/Taeji46/MixQuesta.git
 $ cd MixQuesta
